@@ -9,7 +9,7 @@ namespace RPA_Teste.Telegram
     internal class TelegramApi
     {
         private static TelegramBotClient _botClient = new TelegramBotClient("7138305614:AAF2KBe6uMKdxZxHG4aeYbSZc2n5A8hzs_Y");
-        private static long chatId = -1002090888464; // Id do grupo RPA Tora
+        private static long chatId = -1002090888464; 
 
         public static async Task SendMessageAsync(string message)
         {

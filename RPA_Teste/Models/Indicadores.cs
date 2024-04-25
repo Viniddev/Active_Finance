@@ -9,6 +9,7 @@ namespace RPA_Teste.Models
 {
     public class Indicadores
     {
+        public string Price { get; set; }
         public string LiquidezMediaDiaria { get; set; }
         public string UltimoRendimento { get; set; }
         public string DividendYield { get; set; }

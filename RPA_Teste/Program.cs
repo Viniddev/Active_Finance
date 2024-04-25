@@ -18,11 +18,7 @@ namespace RPA_Teste
         static void Main(string[] args) 
         {
             ChromeDriver driver = Launch.LaunchNavegador();
-            IReadOnlyCollection<IWebElement> values = GetInformations.Challenge(driver);
-            Excel.InserirIndicadores(values, driver);
-
-            Console.ReadLine();
-
+            GetInformations.Buscar(driver);
             Aplication.KillChromeDriver();
         }
     }
