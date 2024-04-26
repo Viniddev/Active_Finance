@@ -8,15 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Maneger\**" />
+    <EmbeddedResource Remove="Maneger\**" />
+    <None Remove="Maneger\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.102.1" />
     <PackageReference Include="Selenium.Support" Version="4.16.2" />
     <PackageReference Include="Selenium.WebDriver" Version="4.16.2" />
     <PackageReference Include="Telegram.Bot" Version="19.0.0" />
     <PackageReference Include="WebDriverManager" Version="2.17.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Maneger\" />
   </ItemGroup>
 
 </Project>

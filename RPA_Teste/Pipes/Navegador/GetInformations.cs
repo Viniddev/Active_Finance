@@ -17,7 +17,6 @@ namespace RPA_Teste.Pipes.Navegador
                 "bvar11",
                 "SNCI11"
             };
-            //string emojiStop = char.ConvertFromUtf32(0x1F6D1);
             string emojiVerde = char.ConvertFromUtf32(0x1F7E2);
             string mensagem = $"   {emojiVerde} FUNDOS IMOBILIÁRIOS \n\n";
 
@@ -58,9 +57,9 @@ namespace RPA_Teste.Pipes.Navegador
                 "VALE3",
                 "ITUB4",
                 "PETR4",
-                "MGLU3"
+                "MGLU3",
+                "ITSA3"
             };
-            //string emojiStop = char.ConvertFromUtf32(0x1F6D1);
             string emojiVermelho = char.ConvertFromUtf32(0x1F534);
             string mensagem = $"  {emojiVermelho} AÇÕES \n\n";
 
