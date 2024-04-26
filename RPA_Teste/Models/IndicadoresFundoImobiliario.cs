@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RPA_Teste.Models
 {
-    public class Indicadores
+    public class IndicadoresFundoImobiliario
     {
         public string Price { get; set; }
         public string LiquidezMediaDiaria { get; set; }

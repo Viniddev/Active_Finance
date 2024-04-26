@@ -18,7 +18,10 @@ namespace RPA_Teste
         static void Main(string[] args) 
         {
             ChromeDriver driver = Launch.LaunchNavegador();
-            GetInformations.Buscar(driver);
+
+            GetInformations.BuscarFundosImobiliarios(driver);
+            GetInformations.BuscarAcoes(driver);
+
             Aplication.KillChromeDriver();
         }
     }
