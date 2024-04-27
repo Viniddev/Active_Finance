@@ -11,7 +11,7 @@ namespace RPA_Teste.Pipes.Excel
     {
         public static void InserirIndicadores(IReadOnlyCollection<IWebElement> valoresAcao, ChromeDriver driver) 
         {
-            IWebElement nomeAcao = driver.FindElement(By.XPath("//*[@id=\"tickerName\"]"));
+            IWebElement nomeAcao = driver.FindElement(By.XPath("//*[@id='tickerName']"));
 
             string caminho = AppDomain.CurrentDomain.BaseDirectory + @"Acoes.xlsx";
 
@@ -23,7 +23,6 @@ namespace RPA_Teste.Pipes.Excel
 
                     if (IsFirstRowEmpty(worksheet))
                     {
-                        Console.WriteLine("IsFirstRowEmpty(worksheet) is true");
                         AddHeaders(worksheet, Constants.Cabecalho.Propriedades);
                     }
 

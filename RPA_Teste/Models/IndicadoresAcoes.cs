@@ -8,18 +8,18 @@ namespace RPA_Teste.Models
 {
     internal class IndicadoresAcoes
     {
-        public string ValorAtual { get; set; }
-        public string Min52Semanas { get; set; }
-        public string Max52Semanas { get; set; }
-        public string DividendYeld { get; set; }
-        public string Valorizacao12Meses { get; set; }
-        public string PrecoLucro { get; set; }
-        public string PrecoSobreValorPatrimonial { get; set; }
-        public string ValorPatrimonialPorAcao { get; set; }
-        public string LucroPorAcao { get; set; }
-        public string DividaLiquidaPorPatrimonioLiquido { get; set; }
-        public string MargemBruta { get; set; }
-        public string RetornoSobrePatrimonioLiquido { get; set; }
+        public double ValorAtual { get; set; }
+        public double Min52Semanas { get; set; }
+        public double Max52Semanas { get; set; }
+        public double DividendYeld { get; set; }
+        public double Valorizacao12Meses { get; set; }
+        public double PrecoLucro { get; set; }
+        public double PrecoSobreValorPatrimonial { get; set; }
+        public double ValorPatrimonialPorAcao { get; set; }
+        public double LucroPorAcao { get; set; }
+        public double DividaLiquidaPorPatrimonioLiquido { get; set; }
+        public double MargemBruta { get; set; }
+        public double RetornoSobrePatrimonioLiquido { get; set; }
 
     }
 }

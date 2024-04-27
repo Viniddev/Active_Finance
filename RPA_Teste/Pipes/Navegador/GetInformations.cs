@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using RPA_Teste.Models;
 using Telegram.Bot.Types;
+using System.Globalization;
 
 
 namespace RPA_Teste.Pipes.Navegador
@@ -23,26 +24,27 @@ namespace RPA_Teste.Pipes.Navegador
 
             foreach (var fundo in fundosImobiliarios) 
             {
-                Thread.Sleep(1000);
                 driver.Navigate().GoToUrl($"https://statusinvest.com.br/fundos-imobiliarios/{fundo}");
                 IndicadoresFundoImobiliario indicadoresFundo = new IndicadoresFundoImobiliario();
                 var elementosIndicadores = driver.FindElements(By.XPath(".//strong[@class = 'value']"));
 
-                indicadoresFundo.ValorAtual = elementosIndicadores[0].Text;
-                indicadoresFundo.Min52Semanas = elementosIndicadores[1].Text;
-                indicadoresFundo.Max52Semanas = elementosIndicadores[2].Text;
-                indicadoresFundo.DividendYeld = elementosIndicadores[3].Text;
-                indicadoresFundo.Valorizacao12Meses = elementosIndicadores[4].Text;
-                indicadoresFundo.ValPatrimonialPorCota = elementosIndicadores[5].Text;
-                indicadoresFundo.PVP = elementosIndicadores[6].Text;
-                indicadoresFundo.ValorEmCaixa = elementosIndicadores[7].Text;
+                indicadoresFundo.ValorAtual = ReceberDados(elementosIndicadores[0].Text);
+                indicadoresFundo.Min52Semanas = ReceberDados(elementosIndicadores[1].Text);
+                indicadoresFundo.Max52Semanas = ReceberDados(elementosIndicadores[2].Text);
+                indicadoresFundo.DividendYeld = ReceberDados(elementosIndicadores[3].Text);
+                indicadoresFundo.Valorizacao12Meses = ReceberDados(elementosIndicadores[4].Text);
+                indicadoresFundo.ValPatrimonialPorCota = ReceberDados(elementosIndicadores[5].Text);
+                indicadoresFundo.PVP = ReceberDados(elementosIndicadores[6].Text);
+                indicadoresFundo.ValorEmCaixa = ReceberDados(elementosIndicadores[7].Text);
+
                 var ultimoRendimento = driver.FindElement(By.XPath(".//strong[@class = 'value d-inline-block fs-5 fw-900'][1]"));                
-                indicadoresFundo.UltimoRendimento = ultimoRendimento.Text;
+                indicadoresFundo.UltimoRendimento = ReceberDados(ultimoRendimento.Text);
+
                 elementosIndicadores = driver.FindElements(By.XPath(".//b[@class = 'sub-value fs-4 lh-3']"));
-                indicadoresFundo.Rendimento = elementosIndicadores[0].Text;
-                indicadoresFundo.CotacaoBase = elementosIndicadores[1].Text;
-                indicadoresFundo.DataBase = elementosIndicadores[2].Text;
-                indicadoresFundo.DataPagamento = elementosIndicadores[3].Text;
+                indicadoresFundo.Rendimento = ReceberDados(elementosIndicadores[0].Text);
+                indicadoresFundo.CotacaoBase = ReceberDados(elementosIndicadores[1].Text);
+                indicadoresFundo.DataBase = ConvertDate(elementosIndicadores[2].Text);
+                indicadoresFundo.DataPagamento = ConvertDate(elementosIndicadores[3].Text);
 
 
                 mensagem += $"\u2705  Fundo: {fundo.ToUpper()}; \n" +
@@ -50,7 +52,7 @@ namespace RPA_Teste.Pipes.Navegador
                             $" Min(52) Semanas: R${indicadoresFundo.Min52Semanas}; \n" +
                             $" Max(52) Semanas: R${indicadoresFundo.Max52Semanas}; \n" +
                             $" DY: {indicadoresFundo.DividendYeld}%; \n" +
-                            $" Valorização(12m): {indicadoresFundo.Valorizacao12Meses}; \n" +
+                            $" Valorização(12m): {indicadoresFundo.Valorizacao12Meses}%; \n" +
                             $" PVP: {indicadoresFundo.PVP}; \n" +
                             $" Ultimo Rendimento: R$ {indicadoresFundo.UltimoRendimento}; \n" +
                             $" Data Base: {indicadoresFundo.DataBase}; \n" +
@@ -64,8 +66,6 @@ namespace RPA_Teste.Pipes.Navegador
 
         public static void BuscarAcoes(ChromeDriver driver) 
         {
-            Thread.Sleep(1000);
-           
             List<string> acoes = new List<string>()
             {
                 "VALE3",
@@ -84,20 +84,20 @@ namespace RPA_Teste.Pipes.Navegador
                 IndicadoresAcoes indicadoresAcoes = new IndicadoresAcoes();
 
 
-                indicadoresAcoes.ValorAtual = elementosIndicadores[0].Text;
-                indicadoresAcoes.Min52Semanas = elementosIndicadores[1].Text;
-                indicadoresAcoes.Max52Semanas = elementosIndicadores[2].Text;
-                indicadoresAcoes.DividendYeld = elementosIndicadores[3].Text;
-                indicadoresAcoes.Valorizacao12Meses = elementosIndicadores[4].Text;
+                indicadoresAcoes.ValorAtual = ReceberDados(elementosIndicadores[0].Text);
+                indicadoresAcoes.Min52Semanas = ReceberDados(elementosIndicadores[1].Text);
+                indicadoresAcoes.Max52Semanas = ReceberDados(elementosIndicadores[2].Text);
+                indicadoresAcoes.DividendYeld = ReceberDados(elementosIndicadores[3].Text);
+                indicadoresAcoes.Valorizacao12Meses = ReceberDados(elementosIndicadores[4].Text);
 
                 elementosIndicadores = driver.FindElements(By.XPath(".//strong[@class='value d-block lh-4 fs-4 fw-700']"));
-                indicadoresAcoes.PrecoLucro = elementosIndicadores[1].Text;
-                indicadoresAcoes.PrecoSobreValorPatrimonial = elementosIndicadores[3].Text;
-                indicadoresAcoes.ValorPatrimonialPorAcao = elementosIndicadores[8].Text;
-                indicadoresAcoes.LucroPorAcao = elementosIndicadores[9].Text;
-                indicadoresAcoes.DividaLiquidaPorPatrimonioLiquido = elementosIndicadores[14].Text;
-                indicadoresAcoes.MargemBruta = elementosIndicadores[20].Text;
-                indicadoresAcoes.RetornoSobrePatrimonioLiquido = elementosIndicadores[24].Text;
+                indicadoresAcoes.PrecoLucro = ReceberDados(elementosIndicadores[1].Text);
+                indicadoresAcoes.PrecoSobreValorPatrimonial = ReceberDados(elementosIndicadores[3].Text);
+                indicadoresAcoes.ValorPatrimonialPorAcao = ReceberDados(elementosIndicadores[8].Text);
+                indicadoresAcoes.LucroPorAcao = ReceberDados(elementosIndicadores[9].Text);
+                indicadoresAcoes.DividaLiquidaPorPatrimonioLiquido = ReceberDados(elementosIndicadores[14].Text);
+                indicadoresAcoes.MargemBruta = ReceberDados(elementosIndicadores[20].Text);
+                indicadoresAcoes.RetornoSobrePatrimonioLiquido = ReceberDados(elementosIndicadores[24].Text);
 
 
                 mensagem += $"\U0001F6A9 Ativo: {acao.ToUpper()}; \n" +
@@ -115,6 +115,28 @@ namespace RPA_Teste.Pipes.Navegador
             }
 
             Telegram.TelegramApi.SendMessageAsync(mensagem).Wait();
+        }
+
+
+        public static DateTime ConvertDate(string data) 
+        {
+            var dataFormatada = DateTime.Now;
+
+            if (DateTime.TryParseExact(data, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dataFormatada))
+                return dataFormatada;
+            else 
+                throw new Exception("Não foi possivel formatar data");
+        }
+
+        public static double ReceberDados(string value) 
+        {
+            value = value.ToString().Equals("-") || value.ToString().Equals("-%") ? "0" : value.ToString().Replace("%", "");
+
+            if (double.TryParse(value, out double formatado))
+                return formatado;
+            else 
+                throw new Exception("Não foi possivel formatar");
+                
         }
     }
 }

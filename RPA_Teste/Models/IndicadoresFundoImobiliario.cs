@@ -9,18 +9,18 @@ namespace RPA_Teste.Models
 {
     public class IndicadoresFundoImobiliario
     {
-        public string ValorAtual { get; set; }
-        public string Min52Semanas { get; set; }
-        public string Max52Semanas { get; set; }
-        public string DividendYeld { get; set; }
-        public string Valorizacao12Meses { get; set; }
-        public string ValPatrimonialPorCota { get; set; }
-        public string PVP { get; set; }
-        public string ValorEmCaixa { get; set; }
-        public string UltimoRendimento { get; set; }
-        public string Rendimento { get; set; }
-        public string CotacaoBase { get; set; }
-        public string DataBase { get; set; }
-        public string DataPagamento { get; set; }
+        public double ValorAtual { get; set; }
+        public double Min52Semanas { get; set; }
+        public double Max52Semanas { get; set; }
+        public double DividendYeld { get; set; }
+        public double Valorizacao12Meses { get; set; }
+        public double ValPatrimonialPorCota { get; set; }
+        public double PVP { get; set; }
+        public double ValorEmCaixa { get; set; }
+        public double UltimoRendimento { get; set; }
+        public double Rendimento { get; set; }
+        public double CotacaoBase { get; set; }
+        public DateTime DataBase { get; set; }
+        public DateTime DataPagamento { get; set; }
     }
 }
