@@ -22,7 +22,7 @@ namespace RPA_Teste
             GetInformations.BuscarFundosImobiliarios(driver);
             GetInformations.BuscarAcoes(driver);
 
-            Aplication.KillChromeDriver();
+            //Aplication.KillChromeDriver();
         }
     }
 }
