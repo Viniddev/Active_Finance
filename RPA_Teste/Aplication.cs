@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System;
+using System.IO;
 
 namespace RPA_Teste
 {
@@ -10,6 +12,19 @@ namespace RPA_Teste
 
             KillChromeDriver();
 
+        }
+
+        public static bool EhPeriodoUtil()
+        {
+            DateTime ProcessStart = DateTime.Now;
+
+            if (ProcessStart.Hour < 10 || ProcessStart.Hour > 17)
+                return false;
+
+            if (ProcessStart.DayOfWeek.ToString().Equals("Saturday") || ProcessStart.DayOfWeek.ToString().Equals("Sunday"))
+                return false;
+
+            return true;
         }
 
         public static int KillChromeDriver()

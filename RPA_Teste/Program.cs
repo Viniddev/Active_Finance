@@ -17,14 +17,16 @@ namespace RPA_Teste
     {
         static void Main(string[] args) 
         {
-            ChromeDriver driver = Launch.LaunchNavegador();
+            if (Aplication.EhPeriodoUtil()) 
+            {
+                ChromeDriver driver = Launch.LaunchNavegador();
 
-            GetInformations.BuscarFundosImobiliarios(driver);
-            GetInformations.BuscarAcoes(driver);
+                List<IndicadoresFundoImobiliario> listaIndicadoresFundo = GetInformations.BuscarFundosImobiliarios(driver);
+                List<IndicadoresAcoes> listaIndicadoresAcoes = GetInformations.BuscarAcoes(driver);
 
-            Telegram.TelegramApi.SendMessageAsync(" \u2705 Task Concluded, Chefão.").Wait();
-
-            Aplication.KillChromeDriver();
+                Telegram.TelegramApi.SendMessageAsync(" \u2705 Task Concluded, Chefão.").Wait();
+                Aplication.KillChromeDriver();
+            }
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RPA_Teste.Models
 {
-    internal class IndicadoresAcoes
+    public class IndicadoresAcoes
     {
         public double ValorAtual { get; set; }
         public double Min52Semanas { get; set; }

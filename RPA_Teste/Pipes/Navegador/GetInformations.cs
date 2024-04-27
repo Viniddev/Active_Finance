@@ -3,14 +3,16 @@ using OpenQA.Selenium;
 using RPA_Teste.Models;
 using Telegram.Bot.Types;
 using System.Globalization;
+using System.Collections.Generic;
 
 
 namespace RPA_Teste.Pipes.Navegador
 {
     public class GetInformations
     {
-        public static void BuscarFundosImobiliarios(ChromeDriver driver)
+        public static List<IndicadoresFundoImobiliario> BuscarFundosImobiliarios(ChromeDriver driver)
         {
+            List<IndicadoresFundoImobiliario> ListaDeFundos = new List<IndicadoresFundoImobiliario>();
             List<string> fundosImobiliarios = new List<string>() 
             {
                 "XPML11",
@@ -19,9 +21,9 @@ namespace RPA_Teste.Pipes.Navegador
                 "SNCI11",
                 "BTRA11"
             };
+
             string emojiVerde = char.ConvertFromUtf32(0x1F7E2);
             string mensagem = $"   {emojiVerde} FUNDOS IMOBILIÁRIOS \n\n";
-
             foreach (var fundo in fundosImobiliarios) 
             {
                 driver.Navigate().GoToUrl($"https://statusinvest.com.br/fundos-imobiliarios/{fundo}");
@@ -36,10 +38,8 @@ namespace RPA_Teste.Pipes.Navegador
                 indicadoresFundo.ValPatrimonialPorCota = ReceberDados(elementosIndicadores[5].Text);
                 indicadoresFundo.PVP = ReceberDados(elementosIndicadores[6].Text);
                 indicadoresFundo.ValorEmCaixa = ReceberDados(elementosIndicadores[7].Text);
-
-                var ultimoRendimento = driver.FindElement(By.XPath(".//strong[@class = 'value d-inline-block fs-5 fw-900'][1]"));                
+                var ultimoRendimento = driver.FindElement(By.XPath(".//strong[@class = 'value d-inline-block fs-5 fw-900'][1]"));
                 indicadoresFundo.UltimoRendimento = ReceberDados(ultimoRendimento.Text);
-
                 elementosIndicadores = driver.FindElements(By.XPath(".//b[@class = 'sub-value fs-4 lh-3']"));
                 indicadoresFundo.Rendimento = ReceberDados(elementosIndicadores[0].Text);
                 indicadoresFundo.CotacaoBase = ReceberDados(elementosIndicadores[1].Text);
@@ -60,12 +60,17 @@ namespace RPA_Teste.Pipes.Navegador
                             $"\n\n";
 
 
+                ListaDeFundos.Add(indicadoresFundo);
             }
             Telegram.TelegramApi.SendMessageAsync(mensagem).Wait();
+
+            return ListaDeFundos;
         }
 
-        public static void BuscarAcoes(ChromeDriver driver) 
+        public static List<IndicadoresAcoes> BuscarAcoes(ChromeDriver driver) 
         {
+
+            List<IndicadoresAcoes> listaDeAcoes = new List<IndicadoresAcoes>();
             List<string> acoes = new List<string>()
             {
                 "VALE3",
@@ -89,7 +94,6 @@ namespace RPA_Teste.Pipes.Navegador
                 indicadoresAcoes.Max52Semanas = ReceberDados(elementosIndicadores[2].Text);
                 indicadoresAcoes.DividendYeld = ReceberDados(elementosIndicadores[3].Text);
                 indicadoresAcoes.Valorizacao12Meses = ReceberDados(elementosIndicadores[4].Text);
-
                 elementosIndicadores = driver.FindElements(By.XPath(".//strong[@class='value d-block lh-4 fs-4 fw-700']"));
                 indicadoresAcoes.PrecoLucro = ReceberDados(elementosIndicadores[1].Text);
                 indicadoresAcoes.PrecoSobreValorPatrimonial = ReceberDados(elementosIndicadores[3].Text);
@@ -112,9 +116,13 @@ namespace RPA_Teste.Pipes.Navegador
                             $" Margem Bruta: {indicadoresAcoes.MargemBruta}; \n" +
                             $" ROE: {indicadoresAcoes.RetornoSobrePatrimonioLiquido};" +
                             $"\n\n";
+
+
+                listaDeAcoes.Add(indicadoresAcoes);
             }
 
             Telegram.TelegramApi.SendMessageAsync(mensagem).Wait();
+            return listaDeAcoes;
         }
 
 
