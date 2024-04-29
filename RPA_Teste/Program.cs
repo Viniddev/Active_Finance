@@ -21,8 +21,8 @@ namespace RPA_Teste
             {
                 ChromeDriver driver = Launch.LaunchNavegador();
 
-                List<IndicadoresFundoImobiliario> listaIndicadoresFundo = GetInformations.BuscarFundosImobiliarios(driver);
-                List<IndicadoresAcoes> listaIndicadoresAcoes = GetInformations.BuscarAcoes(driver);
+                GetInformations.BuscarFundosImobiliarios(driver);
+                GetInformations.BuscarAcoes(driver);
 
                 Telegram.TelegramApi.SendMessageAsync(" \u2705 Task Concluded, Chefão.").Wait();
                 Aplication.KillChromeDriver();
