@@ -14,6 +14,26 @@ namespace RPA_Teste.Pipes.Navegador
     {
         public static List<IndicadoresFundoImobiliario> BuscarFundosImobiliarios(ChromeDriver driver)
         {
+            Thread.Sleep(1500);
+            ConectionDb conn = new ConectionDb();
+
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("Nome");
+            dataTable.Columns.Add("ValorAtual");
+            dataTable.Columns.Add("Min52Semanas");
+            dataTable.Columns.Add("Max52Semanas");
+            dataTable.Columns.Add("DividendYeld");
+            dataTable.Columns.Add("Valorizacao12Meses");
+            dataTable.Columns.Add("valpatrimonialporcota");
+            dataTable.Columns.Add("pvp");
+            dataTable.Columns.Add("valoremcaixa");
+            dataTable.Columns.Add("ultimorendimento");
+            dataTable.Columns.Add("rendimento");
+            dataTable.Columns.Add("cotacaobase");
+            dataTable.Columns.Add("database");
+            dataTable.Columns.Add("datapagamento");
+
+
             List<IndicadoresFundoImobiliario> ListaDeFundos = new List<IndicadoresFundoImobiliario>();
             List<string> fundosImobiliarios = new List<string>() 
             {
@@ -63,7 +83,30 @@ namespace RPA_Teste.Pipes.Navegador
 
 
                 ListaDeFundos.Add(indicadoresFundo);
+
+                DataRow row = dataTable.NewRow();
+
+                row[0] = fundo.ToUpper();
+                row[1] = indicadoresFundo.ValorAtual;
+                row[2] = indicadoresFundo.Min52Semanas;
+                row[3] = indicadoresFundo.Max52Semanas;
+                row[4] = indicadoresFundo.DividendYeld;
+                row[5] = indicadoresFundo.Valorizacao12Meses;
+                row[6] = indicadoresFundo.ValPatrimonialPorCota;
+                row[7] = indicadoresFundo.PVP;
+                row[8] = indicadoresFundo.ValorEmCaixa;
+                row[9] = indicadoresFundo.UltimoRendimento;
+                row[10] = indicadoresFundo.Rendimento;
+                row[11] = indicadoresFundo.CotacaoBase;
+                row[12] = indicadoresFundo.DataBase;
+                row[13] = indicadoresFundo.DataPagamento;
+
+                dataTable.Rows.Add(row);
             }
+
+            conn.Bulky(dataTable, "[ACTIVE_FINANCE].[DBO].[EXTRACOESFUNDOIMOBILIARIO]", 2);
+
+
             Telegram.TelegramApi.SendMessageAsync(mensagem).Wait();
 
             return ListaDeFundos;
@@ -71,6 +114,7 @@ namespace RPA_Teste.Pipes.Navegador
 
         public static List<IndicadoresAcoes> BuscarAcoes(ChromeDriver driver) 
         {
+            Thread.Sleep(1500);
             ConectionDb conn = new ConectionDb();
 
             DataTable dataTable = new DataTable();
@@ -103,68 +147,59 @@ namespace RPA_Teste.Pipes.Navegador
 
             foreach (string acao in acoes) 
             {
-                try
-                {
-                    driver.Navigate().GoToUrl(@$"https://statusinvest.com.br/acoes/{acao}");
-                    var elementosIndicadores = driver.FindElements(By.XPath(".//strong[@class = 'value']"));
-                    IndicadoresAcoes indicadoresAcoes = new IndicadoresAcoes();
+                driver.Navigate().GoToUrl(@$"https://statusinvest.com.br/acoes/{acao}");
+                var elementosIndicadores = driver.FindElements(By.XPath(".//strong[@class = 'value']"));
+                IndicadoresAcoes indicadoresAcoes = new IndicadoresAcoes();
+
+                indicadoresAcoes.Nome = acao.ToUpper();
+                indicadoresAcoes.ValorAtual = ReceberDados(elementosIndicadores[0].Text);
+                indicadoresAcoes.Min52Semanas = ReceberDados(elementosIndicadores[1].Text);
+                indicadoresAcoes.Max52Semanas = ReceberDados(elementosIndicadores[2].Text);
+                indicadoresAcoes.DividendYeld = ReceberDados(elementosIndicadores[3].Text);
+                indicadoresAcoes.Valorizacao12Meses = ReceberDados(elementosIndicadores[4].Text);
+                elementosIndicadores = driver.FindElements(By.XPath(".//strong[@class='value d-block lh-4 fs-4 fw-700']"));
+                indicadoresAcoes.PrecoLucro = ReceberDados(elementosIndicadores[1].Text);
+                indicadoresAcoes.PrecoSobreValorPatrimonial = ReceberDados(elementosIndicadores[3].Text);
+                indicadoresAcoes.ValorPatrimonialPorAcao = ReceberDados(elementosIndicadores[8].Text);
+                indicadoresAcoes.LucroPorAcao = ReceberDados(elementosIndicadores[9].Text);
+                indicadoresAcoes.DividaLiquidaPorPatrimonioLiquido = ReceberDados(elementosIndicadores[14].Text);
+                indicadoresAcoes.MargemBruta = ReceberDados(elementosIndicadores[20].Text);
+                indicadoresAcoes.RetornoSobrePatrimonioLiquido = ReceberDados(elementosIndicadores[24].Text);
 
 
-                    indicadoresAcoes.ValorAtual = ReceberDados(elementosIndicadores[0].Text);
-                    indicadoresAcoes.Min52Semanas = ReceberDados(elementosIndicadores[1].Text);
-                    indicadoresAcoes.Max52Semanas = ReceberDados(elementosIndicadores[2].Text);
-                    indicadoresAcoes.DividendYeld = ReceberDados(elementosIndicadores[3].Text);
-                    indicadoresAcoes.Valorizacao12Meses = ReceberDados(elementosIndicadores[4].Text);
-                    elementosIndicadores = driver.FindElements(By.XPath(".//strong[@class='value d-block lh-4 fs-4 fw-700']"));
-                    indicadoresAcoes.PrecoLucro = ReceberDados(elementosIndicadores[1].Text);
-                    indicadoresAcoes.PrecoSobreValorPatrimonial = ReceberDados(elementosIndicadores[3].Text);
-                    indicadoresAcoes.ValorPatrimonialPorAcao = ReceberDados(elementosIndicadores[8].Text);
-                    indicadoresAcoes.LucroPorAcao = ReceberDados(elementosIndicadores[9].Text);
-                    indicadoresAcoes.DividaLiquidaPorPatrimonioLiquido = ReceberDados(elementosIndicadores[14].Text);
-                    indicadoresAcoes.MargemBruta = ReceberDados(elementosIndicadores[20].Text);
-                    indicadoresAcoes.RetornoSobrePatrimonioLiquido = ReceberDados(elementosIndicadores[24].Text);
+                mensagem += $"\U0001F6A9 Ativo: {acao.ToUpper()}; \n" +
+                            $" Valor Atual: R${indicadoresAcoes.ValorAtual}; \n" +
+                            $" VPA: R${indicadoresAcoes.ValorPatrimonialPorAcao}; \n" +
+                            $" Min(52) Semanas: R${indicadoresAcoes.Min52Semanas}; \n" +
+                            $" Max(52) Semanas: R${indicadoresAcoes.Max52Semanas}; \n" +
+                            $" DY: {indicadoresAcoes.DividendYeld}%; \n" +
+                            $" PL: {indicadoresAcoes.PrecoLucro}; \n" +
+                            $" LPA: {indicadoresAcoes.LucroPorAcao}; \n" +
+                            $" DÍV. LÍQUIDA/PL: {indicadoresAcoes.DividaLiquidaPorPatrimonioLiquido}; \n" +
+                            $" Margem Bruta: {indicadoresAcoes.MargemBruta}; \n" +
+                            $" ROE: {indicadoresAcoes.RetornoSobrePatrimonioLiquido};" +
+                            $"\n\n";
 
 
-                    mensagem += $"\U0001F6A9 Ativo: {acao.ToUpper()}; \n" +
-                                $" Valor Atual: R${indicadoresAcoes.ValorAtual}; \n" +
-                                $" VPA: R${indicadoresAcoes.ValorPatrimonialPorAcao}; \n" +
-                                $" Min(52) Semanas: R${indicadoresAcoes.Min52Semanas}; \n" +
-                                $" Max(52) Semanas: R${indicadoresAcoes.Max52Semanas}; \n" +
-                                $" DY: {indicadoresAcoes.DividendYeld}%; \n" +
-                                $" PL: {indicadoresAcoes.PrecoLucro}; \n" +
-                                $" LPA: {indicadoresAcoes.LucroPorAcao}; \n" +
-                                $" DÍV. LÍQUIDA/PL: {indicadoresAcoes.DividaLiquidaPorPatrimonioLiquido}; \n" +
-                                $" Margem Bruta: {indicadoresAcoes.MargemBruta}; \n" +
-                                $" ROE: {indicadoresAcoes.RetornoSobrePatrimonioLiquido};" +
-                                $"\n\n";
+                listaDeAcoes.Add(indicadoresAcoes);
 
+                DataRow row = dataTable.NewRow();
 
-                    listaDeAcoes.Add(indicadoresAcoes);
+                row[0] = acao.ToUpper();
+                row[1] = indicadoresAcoes.ValorAtual;
+                row[2] = indicadoresAcoes.Min52Semanas;
+                row[3] = indicadoresAcoes.Max52Semanas;
+                row[4] = indicadoresAcoes.DividendYeld;
+                row[5] = indicadoresAcoes.Valorizacao12Meses;
+                row[6] = indicadoresAcoes.PrecoLucro;
+                row[7] = indicadoresAcoes.PrecoSobreValorPatrimonial;
+                row[8] = indicadoresAcoes.ValorPatrimonialPorAcao;
+                row[9] = indicadoresAcoes.LucroPorAcao;
+                row[10] = indicadoresAcoes.DividaLiquidaPorPatrimonioLiquido;
+                row[11] = indicadoresAcoes.MargemBruta;
+                row[12] = indicadoresAcoes.RetornoSobrePatrimonioLiquido;
 
-                    DataRow row = dataTable.NewRow();
-
-                    row[0] = acao.ToUpper();
-                    row[1] = indicadoresAcoes.ValorAtual;   
-                    row[2] = indicadoresAcoes.Min52Semanas;
-                    row[3] = indicadoresAcoes.Max52Semanas;
-                    row[4] = indicadoresAcoes.DividendYeld;
-                    row[5] = indicadoresAcoes.Valorizacao12Meses;
-                    row[6] = indicadoresAcoes.PrecoLucro;
-                    row[7] = indicadoresAcoes.PrecoSobreValorPatrimonial;
-                    row[8] = indicadoresAcoes.ValorPatrimonialPorAcao;
-                    row[9] = indicadoresAcoes.LucroPorAcao;
-                    row[10] = indicadoresAcoes.DividaLiquidaPorPatrimonioLiquido;
-                    row[11] = indicadoresAcoes.MargemBruta;
-                    row[12] = indicadoresAcoes.RetornoSobrePatrimonioLiquido;
-
-                    dataTable.Rows.Add(row);
-
-                }
-                catch (Exception ex) 
-                {
-                    Console.WriteLine($"EX >> {ex.ToString()}");
-                    Console.ReadLine();
-                }
+                dataTable.Rows.Add(row);
 
             }
 

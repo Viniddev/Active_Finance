@@ -9,6 +9,7 @@ namespace RPA_Teste.Models
 {
     public class IndicadoresFundoImobiliario
     {
+        public string Nome { get; set; }
         public double ValorAtual { get; set; }
         public double Min52Semanas { get; set; }
         public double Max52Semanas { get; set; }
