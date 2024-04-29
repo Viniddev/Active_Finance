@@ -4,6 +4,8 @@ using RPA_Teste.Models;
 using Telegram.Bot.Types;
 using System.Globalization;
 using System.Collections.Generic;
+using RPA_Teste.DataBase;
+using System.Data;
 
 
 namespace RPA_Teste.Pipes.Navegador
@@ -69,6 +71,22 @@ namespace RPA_Teste.Pipes.Navegador
 
         public static List<IndicadoresAcoes> BuscarAcoes(ChromeDriver driver) 
         {
+            ConectionDb conn = new ConectionDb();
+
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("Nome");
+            dataTable.Columns.Add("ValorAtual");
+            dataTable.Columns.Add("Min52Semanas");
+            dataTable.Columns.Add("Max52Semanas");
+            dataTable.Columns.Add("DividendYeld");
+            dataTable.Columns.Add("Valorizacao12Meses");
+            dataTable.Columns.Add("PrecoLucro");
+            dataTable.Columns.Add("PrecoSobreValorPatrimonial");
+            dataTable.Columns.Add("ValorPatrimonialPorAcao");
+            dataTable.Columns.Add("LucroPorAcao");
+            dataTable.Columns.Add("DividaLiquidaPorPatrimonioLiquido");
+            dataTable.Columns.Add("MargemBruta");
+            dataTable.Columns.Add("RetornoSobrePatrimonioLiquido");
 
             List<IndicadoresAcoes> listaDeAcoes = new List<IndicadoresAcoes>();
             List<string> acoes = new List<string>()
@@ -79,47 +97,78 @@ namespace RPA_Teste.Pipes.Navegador
                 "MGLU3",
                 "ITSA3"
             };
+
             string emojiVermelho = char.ConvertFromUtf32(0x1F534);
             string mensagem = $"  {emojiVermelho} AÇÕES \n\n";
 
             foreach (string acao in acoes) 
             {
-                driver.Navigate().GoToUrl(@$"https://statusinvest.com.br/acoes/{acao}");
-                var elementosIndicadores = driver.FindElements(By.XPath(".//strong[@class = 'value']"));
-                IndicadoresAcoes indicadoresAcoes = new IndicadoresAcoes();
+                try
+                {
+                    driver.Navigate().GoToUrl(@$"https://statusinvest.com.br/acoes/{acao}");
+                    var elementosIndicadores = driver.FindElements(By.XPath(".//strong[@class = 'value']"));
+                    IndicadoresAcoes indicadoresAcoes = new IndicadoresAcoes();
 
 
-                indicadoresAcoes.ValorAtual = ReceberDados(elementosIndicadores[0].Text);
-                indicadoresAcoes.Min52Semanas = ReceberDados(elementosIndicadores[1].Text);
-                indicadoresAcoes.Max52Semanas = ReceberDados(elementosIndicadores[2].Text);
-                indicadoresAcoes.DividendYeld = ReceberDados(elementosIndicadores[3].Text);
-                indicadoresAcoes.Valorizacao12Meses = ReceberDados(elementosIndicadores[4].Text);
-                elementosIndicadores = driver.FindElements(By.XPath(".//strong[@class='value d-block lh-4 fs-4 fw-700']"));
-                indicadoresAcoes.PrecoLucro = ReceberDados(elementosIndicadores[1].Text);
-                indicadoresAcoes.PrecoSobreValorPatrimonial = ReceberDados(elementosIndicadores[3].Text);
-                indicadoresAcoes.ValorPatrimonialPorAcao = ReceberDados(elementosIndicadores[8].Text);
-                indicadoresAcoes.LucroPorAcao = ReceberDados(elementosIndicadores[9].Text);
-                indicadoresAcoes.DividaLiquidaPorPatrimonioLiquido = ReceberDados(elementosIndicadores[14].Text);
-                indicadoresAcoes.MargemBruta = ReceberDados(elementosIndicadores[20].Text);
-                indicadoresAcoes.RetornoSobrePatrimonioLiquido = ReceberDados(elementosIndicadores[24].Text);
+                    indicadoresAcoes.ValorAtual = ReceberDados(elementosIndicadores[0].Text);
+                    indicadoresAcoes.Min52Semanas = ReceberDados(elementosIndicadores[1].Text);
+                    indicadoresAcoes.Max52Semanas = ReceberDados(elementosIndicadores[2].Text);
+                    indicadoresAcoes.DividendYeld = ReceberDados(elementosIndicadores[3].Text);
+                    indicadoresAcoes.Valorizacao12Meses = ReceberDados(elementosIndicadores[4].Text);
+                    elementosIndicadores = driver.FindElements(By.XPath(".//strong[@class='value d-block lh-4 fs-4 fw-700']"));
+                    indicadoresAcoes.PrecoLucro = ReceberDados(elementosIndicadores[1].Text);
+                    indicadoresAcoes.PrecoSobreValorPatrimonial = ReceberDados(elementosIndicadores[3].Text);
+                    indicadoresAcoes.ValorPatrimonialPorAcao = ReceberDados(elementosIndicadores[8].Text);
+                    indicadoresAcoes.LucroPorAcao = ReceberDados(elementosIndicadores[9].Text);
+                    indicadoresAcoes.DividaLiquidaPorPatrimonioLiquido = ReceberDados(elementosIndicadores[14].Text);
+                    indicadoresAcoes.MargemBruta = ReceberDados(elementosIndicadores[20].Text);
+                    indicadoresAcoes.RetornoSobrePatrimonioLiquido = ReceberDados(elementosIndicadores[24].Text);
 
 
-                mensagem += $"\U0001F6A9 Ativo: {acao.ToUpper()}; \n" +
-                            $" Valor Atual: R${indicadoresAcoes.ValorAtual}; \n" +
-                            $" VPA: R${indicadoresAcoes.ValorPatrimonialPorAcao}; \n" +
-                            $" Min(52) Semanas: R${indicadoresAcoes.Min52Semanas}; \n" +
-                            $" Max(52) Semanas: R${indicadoresAcoes.Max52Semanas}; \n" +
-                            $" DY: {indicadoresAcoes.DividendYeld}%; \n" +
-                            $" PL: {indicadoresAcoes.PrecoLucro}; \n" +
-                            $" LPA: {indicadoresAcoes.LucroPorAcao}; \n" +
-                            $" DÍV. LÍQUIDA/PL: {indicadoresAcoes.DividaLiquidaPorPatrimonioLiquido}; \n" +
-                            $" Margem Bruta: {indicadoresAcoes.MargemBruta}; \n" +
-                            $" ROE: {indicadoresAcoes.RetornoSobrePatrimonioLiquido};" +
-                            $"\n\n";
+                    mensagem += $"\U0001F6A9 Ativo: {acao.ToUpper()}; \n" +
+                                $" Valor Atual: R${indicadoresAcoes.ValorAtual}; \n" +
+                                $" VPA: R${indicadoresAcoes.ValorPatrimonialPorAcao}; \n" +
+                                $" Min(52) Semanas: R${indicadoresAcoes.Min52Semanas}; \n" +
+                                $" Max(52) Semanas: R${indicadoresAcoes.Max52Semanas}; \n" +
+                                $" DY: {indicadoresAcoes.DividendYeld}%; \n" +
+                                $" PL: {indicadoresAcoes.PrecoLucro}; \n" +
+                                $" LPA: {indicadoresAcoes.LucroPorAcao}; \n" +
+                                $" DÍV. LÍQUIDA/PL: {indicadoresAcoes.DividaLiquidaPorPatrimonioLiquido}; \n" +
+                                $" Margem Bruta: {indicadoresAcoes.MargemBruta}; \n" +
+                                $" ROE: {indicadoresAcoes.RetornoSobrePatrimonioLiquido};" +
+                                $"\n\n";
 
 
-                listaDeAcoes.Add(indicadoresAcoes);
+                    listaDeAcoes.Add(indicadoresAcoes);
+
+                    DataRow row = dataTable.NewRow();
+
+                    row[0] = acao.ToUpper();
+                    row[1] = indicadoresAcoes.ValorAtual;   
+                    row[2] = indicadoresAcoes.Min52Semanas;
+                    row[3] = indicadoresAcoes.Max52Semanas;
+                    row[4] = indicadoresAcoes.DividendYeld;
+                    row[5] = indicadoresAcoes.Valorizacao12Meses;
+                    row[6] = indicadoresAcoes.PrecoLucro;
+                    row[7] = indicadoresAcoes.PrecoSobreValorPatrimonial;
+                    row[8] = indicadoresAcoes.ValorPatrimonialPorAcao;
+                    row[9] = indicadoresAcoes.LucroPorAcao;
+                    row[10] = indicadoresAcoes.DividaLiquidaPorPatrimonioLiquido;
+                    row[11] = indicadoresAcoes.MargemBruta;
+                    row[12] = indicadoresAcoes.RetornoSobrePatrimonioLiquido;
+
+                    dataTable.Rows.Add(row);
+
+                }
+                catch (Exception ex) 
+                {
+                    Console.WriteLine($"EX >> {ex.ToString()}");
+                    Console.ReadLine();
+                }
+
             }
+
+            conn.Bulky(dataTable, "[ACTIVE_FINANCE].[DBO].[EXTRACOESACOES]", 2);
 
             Telegram.TelegramApi.SendMessageAsync(mensagem).Wait();
             return listaDeAcoes;
