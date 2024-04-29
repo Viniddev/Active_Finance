@@ -18,7 +18,7 @@ namespace RPA_Teste
         {
             DateTime ProcessStart = DateTime.Now;
 
-            if (ProcessStart.Hour < 10 || ProcessStart.Hour > 17)
+            if (ProcessStart.Hour < 10 || ProcessStart.Hour >= 17)
                 return false;
 
             if (ProcessStart.DayOfWeek.ToString().Equals("Saturday") || ProcessStart.DayOfWeek.ToString().Equals("Sunday"))
