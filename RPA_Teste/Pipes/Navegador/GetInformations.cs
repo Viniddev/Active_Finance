@@ -4,48 +4,37 @@ using RPA_Teste.Models;
 using Telegram.Bot.Types;
 using System.Globalization;
 using System.Collections.Generic;
+using RPA_Teste.DataBase;
+using System.Data;
+using RPA_Teste.Pipes.Extracao;
 
 
 namespace RPA_Teste.Pipes.Navegador
 {
     public class GetInformations
     {
-        public static List<IndicadoresFundoImobiliario> BuscarFundosImobiliarios(ChromeDriver driver)
+        public static void BuscarFundosImobiliarios(ChromeDriver driver)
         {
+            Thread.Sleep(1500);
+            ConectionDb conn = new ConectionDb();
             List<IndicadoresFundoImobiliario> ListaDeFundos = new List<IndicadoresFundoImobiliario>();
-            List<string> fundosImobiliarios = new List<string>() 
+            List<string> fundosImobiliarios = new List<string>();
+
+            var TabelaFundos = conn.Select(Consultas.GetFundos()).Tables[0];
+            foreach (DataRow item in TabelaFundos.Rows)
             {
-                "XPML11",
-                "MXRF11",
-                "BVAR11",
-                "SNCI11",
-                "BTRA11"
-            };
+                fundosImobiliarios.Add(item[0].ToString());
+            }
+            GerenciamentoTabelasFIIs.CreateTable();
 
             string emojiVerde = char.ConvertFromUtf32(0x1F7E2);
             string mensagem = $"   {emojiVerde} FUNDOS IMOBILIÁRIOS \n\n";
+
+
             foreach (var fundo in fundosImobiliarios) 
             {
                 driver.Navigate().GoToUrl($"https://statusinvest.com.br/fundos-imobiliarios/{fundo}");
-                IndicadoresFundoImobiliario indicadoresFundo = new IndicadoresFundoImobiliario();
-                var elementosIndicadores = driver.FindElements(By.XPath(".//strong[@class = 'value']"));
-
-                indicadoresFundo.ValorAtual = ReceberDados(elementosIndicadores[0].Text);
-                indicadoresFundo.Min52Semanas = ReceberDados(elementosIndicadores[1].Text);
-                indicadoresFundo.Max52Semanas = ReceberDados(elementosIndicadores[2].Text);
-                indicadoresFundo.DividendYeld = ReceberDados(elementosIndicadores[3].Text);
-                indicadoresFundo.Valorizacao12Meses = ReceberDados(elementosIndicadores[4].Text);
-                indicadoresFundo.ValPatrimonialPorCota = ReceberDados(elementosIndicadores[5].Text);
-                indicadoresFundo.PVP = ReceberDados(elementosIndicadores[6].Text);
-                indicadoresFundo.ValorEmCaixa = ReceberDados(elementosIndicadores[7].Text);
-                var ultimoRendimento = driver.FindElement(By.XPath(".//strong[@class = 'value d-inline-block fs-5 fw-900'][1]"));
-                indicadoresFundo.UltimoRendimento = ReceberDados(ultimoRendimento.Text);
-                elementosIndicadores = driver.FindElements(By.XPath(".//b[@class = 'sub-value fs-4 lh-3']"));
-                indicadoresFundo.Rendimento = ReceberDados(elementosIndicadores[0].Text);
-                indicadoresFundo.CotacaoBase = ReceberDados(elementosIndicadores[1].Text);
-                indicadoresFundo.DataBase = ConvertDate(elementosIndicadores[2].Text);
-                indicadoresFundo.DataPagamento = ConvertDate(elementosIndicadores[3].Text);
-
+                IndicadoresFundoImobiliario indicadoresFundo = MontarObjetoIndicadoresFundo.Montar(driver, fundo);
 
                 mensagem += $"\u2705  Fundo: {fundo.ToUpper()}; \n" +
                             $" Valor Atual: R${indicadoresFundo.ValorAtual}; \n" +
@@ -55,54 +44,39 @@ namespace RPA_Teste.Pipes.Navegador
                             $" Valorização(12m): {indicadoresFundo.Valorizacao12Meses}%; \n" +
                             $" PVP: {indicadoresFundo.PVP}; \n" +
                             $" Ultimo Rendimento: R$ {indicadoresFundo.UltimoRendimento}; \n" +
-                            $" Data Base: {indicadoresFundo.DataBase}; \n" +
-                            $" Data Pagamento: {indicadoresFundo.DataPagamento};" +
+                            $" Data Base: {indicadoresFundo.DataBase.ToString("dd/MM/yyyy")}; \n" +
+                            $" Data Pagamento: {indicadoresFundo.DataPagamento.ToString("dd/MM/yyyy")};" +
                             $"\n\n";
 
 
                 ListaDeFundos.Add(indicadoresFundo);
+                GerenciamentoTabelasFIIs.PopulateTable(indicadoresFundo);
             }
+            conn.Bulky(GerenciamentoTabelasFIIs.TabelaFII, "[ACTIVE_FINANCE].[DBO].[EXTRACOESFUNDOIMOBILIARIO]", 2);
             Telegram.TelegramApi.SendMessageAsync(mensagem).Wait();
-
-            return ListaDeFundos;
         }
 
-        public static List<IndicadoresAcoes> BuscarAcoes(ChromeDriver driver) 
+        public static void BuscarAcoes(ChromeDriver driver) 
         {
-
+            Thread.Sleep(1500);
+            ConectionDb conn = new ConectionDb();
             List<IndicadoresAcoes> listaDeAcoes = new List<IndicadoresAcoes>();
-            List<string> acoes = new List<string>()
+            List<string> acoes = new List<string>();
+
+            var TabelaAcoes = conn.Select(Consultas.GetAcoes()).Tables[0];
+            foreach (DataRow item in TabelaAcoes.Rows)
             {
-                "VALE3",
-                "ITUB4",
-                "PETR4",
-                "MGLU3",
-                "ITSA3"
-            };
+                acoes.Add(item[0].ToString());
+            }
+            GerenciamentoDeTabelasAcoes.CreateTable();
+
             string emojiVermelho = char.ConvertFromUtf32(0x1F534);
             string mensagem = $"  {emojiVermelho} AÇÕES \n\n";
 
             foreach (string acao in acoes) 
             {
                 driver.Navigate().GoToUrl(@$"https://statusinvest.com.br/acoes/{acao}");
-                var elementosIndicadores = driver.FindElements(By.XPath(".//strong[@class = 'value']"));
-                IndicadoresAcoes indicadoresAcoes = new IndicadoresAcoes();
-
-
-                indicadoresAcoes.ValorAtual = ReceberDados(elementosIndicadores[0].Text);
-                indicadoresAcoes.Min52Semanas = ReceberDados(elementosIndicadores[1].Text);
-                indicadoresAcoes.Max52Semanas = ReceberDados(elementosIndicadores[2].Text);
-                indicadoresAcoes.DividendYeld = ReceberDados(elementosIndicadores[3].Text);
-                indicadoresAcoes.Valorizacao12Meses = ReceberDados(elementosIndicadores[4].Text);
-                elementosIndicadores = driver.FindElements(By.XPath(".//strong[@class='value d-block lh-4 fs-4 fw-700']"));
-                indicadoresAcoes.PrecoLucro = ReceberDados(elementosIndicadores[1].Text);
-                indicadoresAcoes.PrecoSobreValorPatrimonial = ReceberDados(elementosIndicadores[3].Text);
-                indicadoresAcoes.ValorPatrimonialPorAcao = ReceberDados(elementosIndicadores[8].Text);
-                indicadoresAcoes.LucroPorAcao = ReceberDados(elementosIndicadores[9].Text);
-                indicadoresAcoes.DividaLiquidaPorPatrimonioLiquido = ReceberDados(elementosIndicadores[14].Text);
-                indicadoresAcoes.MargemBruta = ReceberDados(elementosIndicadores[20].Text);
-                indicadoresAcoes.RetornoSobrePatrimonioLiquido = ReceberDados(elementosIndicadores[24].Text);
-
+                IndicadoresAcoes indicadoresAcoes = MontarObjetoIndicadoresAcoes.Montar(driver, acao);
 
                 mensagem += $"\U0001F6A9 Ativo: {acao.ToUpper()}; \n" +
                             $" Valor Atual: R${indicadoresAcoes.ValorAtual}; \n" +
@@ -117,34 +91,11 @@ namespace RPA_Teste.Pipes.Navegador
                             $" ROE: {indicadoresAcoes.RetornoSobrePatrimonioLiquido};" +
                             $"\n\n";
 
-
                 listaDeAcoes.Add(indicadoresAcoes);
+                GerenciamentoDeTabelasAcoes.PopulateTable(indicadoresAcoes);
             }
-
+            conn.Bulky(GerenciamentoDeTabelasAcoes.TabelaAcoes, "[ACTIVE_FINANCE].[DBO].[EXTRACOESACOES]", 2);
             Telegram.TelegramApi.SendMessageAsync(mensagem).Wait();
-            return listaDeAcoes;
-        }
-
-
-        public static DateTime ConvertDate(string data) 
-        {
-            var dataFormatada = DateTime.Now;
-
-            if (DateTime.TryParseExact(data, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dataFormatada))
-                return dataFormatada;
-            else 
-                throw new Exception("Não foi possivel formatar data");
-        }
-
-        public static double ReceberDados(string value) 
-        {
-            value = value.ToString().Equals("-") || value.ToString().Equals("-%") ? "0" : value.ToString().Replace("%", "");
-
-            if (double.TryParse(value, out double formatado))
-                return formatado;
-            else 
-                throw new Exception("Não foi possivel formatar");
-                
         }
     }
 }

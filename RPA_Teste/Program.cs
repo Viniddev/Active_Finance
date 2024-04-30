@@ -13,16 +13,18 @@ using Telegram.Bot.Types;
 
 namespace RPA_Teste
 {
-    public class Program 
+    public class Program
     {
-        static void Main(string[] args) 
+        public static async Task Main(string[] args)
         {
-            if (Aplication.EhPeriodoUtil()) 
+            if (Aplication.EhPeriodoUtil())
             {
+                Task Cont = Aplication.Contador();
+
                 ChromeDriver driver = Launch.LaunchNavegador();
-                List<IndicadoresFundoImobiliario> listaIndicadoresFundo = GetInformations.BuscarFundosImobiliarios(driver);
-                List<IndicadoresAcoes> listaIndicadoresAcoes = GetInformations.BuscarAcoes(driver);
-                Telegram.TelegramApi.SendMessageAsync(" \u2705 Task Concluded, Chefão.").Wait();
+                GetInformations.BuscarFundosImobiliarios(driver);
+                GetInformations.BuscarAcoes(driver);
+                Telegram.TelegramApi.SendMessageAsync(" \u2705 Extraction Concluded, Chefão.").Wait();
                 Aplication.KillChromeDriver();
             }
         }

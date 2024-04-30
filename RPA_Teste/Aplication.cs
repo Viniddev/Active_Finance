@@ -7,18 +7,30 @@ namespace RPA_Teste
     internal class Aplication
     {
         public static int ContadorLimiteTempo { get; set; }
-        public static void OnApplicationExit(object sender, EventArgs e)
+        public static async Task Contador()
         {
+            Task cont = Task.Run(async () =>
+            {
+                while (ContadorLimiteTempo < 600)
+                {
+                    ContadorLimiteTempo++;
+                    await Task.Delay(1000);
+                }
+            });
+
+            await cont;
 
             KillChromeDriver();
-
+            Process processo = Process.GetCurrentProcess();
+            processo.CloseMainWindow();
+            processo.WaitForExit();
+            Environment.Exit(1);
         }
-
         public static bool EhPeriodoUtil()
         {
             DateTime ProcessStart = DateTime.Now;
 
-            if (ProcessStart.Hour < 10 || ProcessStart.Hour > 17)
+            if (ProcessStart.Hour < 10 || ProcessStart.Hour >= 17)
                 return false;
 
             if (ProcessStart.DayOfWeek.ToString().Equals("Saturday") || ProcessStart.DayOfWeek.ToString().Equals("Sunday"))
@@ -26,7 +38,12 @@ namespace RPA_Teste
 
             return true;
         }
+        public static void OnApplicationExit(object sender, EventArgs e)
+        {
 
+            KillChromeDriver();
+
+        }
         public static int KillChromeDriver()
         {
 
