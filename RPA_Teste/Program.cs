@@ -20,10 +20,8 @@ namespace RPA_Teste
             if (Aplication.EhPeriodoUtil()) 
             {
                 ChromeDriver driver = Launch.LaunchNavegador();
-
                 List<IndicadoresFundoImobiliario> listaIndicadoresFundo = GetInformations.BuscarFundosImobiliarios(driver);
                 List<IndicadoresAcoes> listaIndicadoresAcoes = GetInformations.BuscarAcoes(driver);
-
                 Telegram.TelegramApi.SendMessageAsync(" \u2705 Task Concluded, Chefão.").Wait();
                 Aplication.KillChromeDriver();
             }
