@@ -13,8 +13,6 @@ namespace RPA_Teste.DataBase
     {
         public string ReadConnectionString(string conectionString)
         {
-            Console.WriteLine($@"{AppDomain.CurrentDomain.BaseDirectory}");
-
             IConfiguration configuration = new ConfigurationBuilder()
                 .SetBasePath($@"{AppDomain.CurrentDomain.BaseDirectory}")
                 .AddJsonFile(@"AppSettings.json")
