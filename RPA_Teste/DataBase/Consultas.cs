@@ -11,7 +11,7 @@ namespace RPA_Teste.DataBase
         public static string InsertAcoes(double ValorAtual, double min52sem, double max52sem, double dy, double valorizacao, double precolucro, double pvp, double vpa, double lpa, double dividaLiquida, double margembruta, double retorno)
         {
             return $@"
-                insert into Active_Finance.dbo.extracoesacoes values (
+                INSERT INTO ACTIVE_FINANCE.DBO.EXTRACOESACOES VALUES (
 	                {ValorAtual},
                     {min52sem},
                     {max52sem},
@@ -28,5 +28,19 @@ namespace RPA_Teste.DataBase
             ;";
         }
 
+        public static string GetFundos() 
+        {
+            return @"
+                SELECT NOME FROM [ACTIVE_FINANCE].[DBO].[FUNDOSIMOBILIARIOS]
+                WHERE [STATUS] = 1
+            ";
+        }
+        public static string GetAcoes()
+        {
+            return @"
+                SELECT NOME FROM [ACTIVE_FINANCE].[DBO].[ACOES]
+                WHERE [STATUS] = 1
+            ";
+        }
     }
 }

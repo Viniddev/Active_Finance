@@ -13,7 +13,6 @@ namespace RPA_Teste
             {
                 while (ContadorLimiteTempo < 600)
                 {
-                    Console.WriteLine(ContadorLimiteTempo);
                     ContadorLimiteTempo++;
                     await Task.Delay(1000);
                 }

@@ -18,8 +18,13 @@ namespace RPA_Teste.Pipes.Navegador
             Thread.Sleep(1500);
             ConectionDb conn = new ConectionDb();
             List<IndicadoresFundoImobiliario> ListaDeFundos = new List<IndicadoresFundoImobiliario>();
-            List<string> fundosImobiliarios = new List<string>() {"XPML11", "MXRF11", "BVAR11", "SNCI11", "BTRA11"};
+            List<string> fundosImobiliarios = new List<string>();
 
+            var TabelaFundos = conn.Select(Consultas.GetFundos()).Tables[0];
+            foreach (DataRow item in TabelaFundos.Rows)
+            {
+                fundosImobiliarios.Add(item[0].ToString());
+            }
             GerenciamentoTabelasFIIs.CreateTable();
 
             string emojiVerde = char.ConvertFromUtf32(0x1F7E2);
@@ -39,8 +44,8 @@ namespace RPA_Teste.Pipes.Navegador
                             $" Valorização(12m): {indicadoresFundo.Valorizacao12Meses}%; \n" +
                             $" PVP: {indicadoresFundo.PVP}; \n" +
                             $" Ultimo Rendimento: R$ {indicadoresFundo.UltimoRendimento}; \n" +
-                            $" Data Base: {indicadoresFundo.DataBase}; \n" +
-                            $" Data Pagamento: {indicadoresFundo.DataPagamento};" +
+                            $" Data Base: {indicadoresFundo.DataBase.ToString("dd/MM/yyyy")}; \n" +
+                            $" Data Pagamento: {indicadoresFundo.DataPagamento.ToString("dd/MM/yyyy")};" +
                             $"\n\n";
 
 
@@ -56,8 +61,13 @@ namespace RPA_Teste.Pipes.Navegador
             Thread.Sleep(1500);
             ConectionDb conn = new ConectionDb();
             List<IndicadoresAcoes> listaDeAcoes = new List<IndicadoresAcoes>();
-            List<string> acoes = new List<string>() {"VALE3", "ITUB4", "PETR4", "MGLU3", "ITSA3"};
+            List<string> acoes = new List<string>();
 
+            var TabelaAcoes = conn.Select(Consultas.GetAcoes()).Tables[0];
+            foreach (DataRow item in TabelaAcoes.Rows)
+            {
+                acoes.Add(item[0].ToString());
+            }
             GerenciamentoDeTabelasAcoes.CreateTable();
 
             string emojiVermelho = char.ConvertFromUtf32(0x1F534);
