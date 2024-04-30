@@ -7,13 +7,26 @@ namespace RPA_Teste
     internal class Aplication
     {
         public static int ContadorLimiteTempo { get; set; }
-        public static void OnApplicationExit(object sender, EventArgs e)
+        public static async Task Contador()
         {
+            Task cont = Task.Run(async () =>
+            {
+                while (ContadorLimiteTempo < 600)
+                {
+                    Console.WriteLine(ContadorLimiteTempo);
+                    ContadorLimiteTempo++;
+                    await Task.Delay(1000);
+                }
+            });
+
+            await cont;
 
             KillChromeDriver();
-
+            Process processo = Process.GetCurrentProcess();
+            processo.CloseMainWindow();
+            processo.WaitForExit();
+            Environment.Exit(1);
         }
-
         public static bool EhPeriodoUtil()
         {
             DateTime ProcessStart = DateTime.Now;
@@ -26,7 +39,12 @@ namespace RPA_Teste
 
             return true;
         }
+        public static void OnApplicationExit(object sender, EventArgs e)
+        {
 
+            KillChromeDriver();
+
+        }
         public static int KillChromeDriver()
         {
 
