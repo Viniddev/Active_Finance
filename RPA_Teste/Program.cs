@@ -1,10 +1,7 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using RPA_Teste;
-using RPA_Teste.Models;
-using RPA_Teste.Pipes.Excel;
+﻿using OpenQA.Selenium.Chrome;
 using RPA_Teste.Pipes.Navegador;
-using Telegram.Bot.Types;
+using RPA_Teste.Pipes.Navegador.Acoes;
+using RPA_Teste.Pipes.Navegador.FundosImobiliarios;
 
 /*
     Espaço para estudar sobre automação
@@ -20,10 +17,10 @@ namespace RPA_Teste
             if (Aplication.EhPeriodoUtil())
             {
                 Task Cont = Aplication.Contador();
-
                 ChromeDriver driver = Launch.LaunchNavegador();
-                GetInformations.BuscarFundosImobiliarios(driver);
-                GetInformations.BuscarAcoes(driver);
+                BuscarFundos.BuscarFundosImobiliarios(driver);
+                BuscarAcoes.Buscar(driver);
+
                 Telegram.TelegramApi.SendMessageAsync(" \u2705 Extraction Concluded, Chefão.").Wait();
                 Aplication.KillChromeDriver();
             }

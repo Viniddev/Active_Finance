@@ -1,5 +1,8 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.IO.Pipes;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -9,7 +12,7 @@ namespace RPA_Teste.Telegram
     internal class TelegramApi
     {
         private static TelegramBotClient _botClient = new TelegramBotClient("7138305614:AAF2KBe6uMKdxZxHG4aeYbSZc2n5A8hzs_Y");
-        private static long chatId = -1002090888464; 
+        private static long chatId = -1002090888464;
 
         public static async Task SendMessageAsync(string message)
         {
@@ -22,6 +25,8 @@ namespace RPA_Teste.Telegram
                 Console.WriteLine($"Error sending message: {ex.Message}");
             }
         }
+
+
         public static async Task SendImageAsync(string imagePath, string caption)
         {
             try
@@ -40,6 +45,39 @@ namespace RPA_Teste.Telegram
             catch (Exception ex)
             {
                 Console.WriteLine($"Error sending image: {ex.Message}");
+            }
+        }
+
+
+        public static async Task SendLogText(string message, string tipo)
+        {
+            try
+            {
+                var filePath = $@"{AppDomain.CurrentDomain.BaseDirectory}LogTxt\Relatorio.txt";
+
+                using (StreamWriter writer = new StreamWriter(filePath, false))
+                {
+                    writer.Write(message);
+                    writer.Close();
+                }
+
+                using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                {
+
+                    var fileName = $"Relatorio_{tipo}.txt";
+                    await _botClient.SendDocumentAsync(
+                        chatId: chatId,
+                        document: InputFile.FromStream(stream: fs, fileName: fileName),
+                        caption: $"Informações atualizadas sobre seus {tipo}."
+                    );
+                };
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Console.WriteLine("\n--------------------------------------------------------------------------\n");
+                Console.WriteLine(ex.StackTrace);
             }
         }
     }
