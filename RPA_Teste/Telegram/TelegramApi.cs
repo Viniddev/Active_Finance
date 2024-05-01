@@ -68,7 +68,7 @@ namespace RPA_Teste.Telegram
                     await _botClient.SendDocumentAsync(
                         chatId: chatId,
                         document: InputFile.FromStream(stream: fs, fileName: fileName),
-                        caption: $"Informações atualizadas sobre seus {tipo}."
+                        caption: $"Informações atualizadas sobre {tipo}."
                     );
                 };
 

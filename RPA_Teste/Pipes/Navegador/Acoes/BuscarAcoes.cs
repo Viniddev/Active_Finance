@@ -1,13 +1,10 @@
-﻿using OpenQA.Selenium.Chrome;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 using RPA_Teste.DataBase;
 using RPA_Teste.Models;
 using RPA_Teste.Pipes.Extracao;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPA_Teste.Pipes.Navegador.Acoes
 {
@@ -15,7 +12,6 @@ namespace RPA_Teste.Pipes.Navegador.Acoes
     {
         public static void Buscar(ChromeDriver driver)
         {
-            Thread.Sleep(1500);
             ConectionDb conn = new ConectionDb();
             List<IndicadoresAcoes> listaDeAcoes = new List<IndicadoresAcoes>();
             List<string> acoes = new List<string>();
@@ -32,9 +28,10 @@ namespace RPA_Teste.Pipes.Navegador.Acoes
 
             foreach (string acao in acoes)
             {
+                Thread.Sleep(1000);
                 driver.Navigate().GoToUrl(@$"https://statusinvest.com.br/acoes/{acao}");
-                IndicadoresAcoes indicadoresAcoes = MontarObjetoIndicadoresAcoes.Montar(driver, acao);
 
+                IndicadoresAcoes indicadoresAcoes = MontarObjetoIndicadoresAcoes.Montar(driver, acao);
                 mensagem += $"\U0001F6A9 Ativo: {acao.ToUpper()}; \n" +
                             $" • Valor Atual: R${indicadoresAcoes.ValorAtual}; \n" +
                             $" • VPA: R${indicadoresAcoes.ValorPatrimonialPorAcao}; \n" +

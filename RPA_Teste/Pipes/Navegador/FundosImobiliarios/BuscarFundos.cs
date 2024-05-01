@@ -15,7 +15,6 @@ namespace RPA_Teste.Pipes.Navegador.FundosImobiliarios
     {
         public static void BuscarFundosImobiliarios(ChromeDriver driver)
         {
-            Thread.Sleep(1500);
             ConectionDb conn = new ConectionDb();
 
             List<string> fundosImobiliarios = new List<string>();
@@ -32,9 +31,10 @@ namespace RPA_Teste.Pipes.Navegador.FundosImobiliarios
 
             foreach (string fundo in fundosImobiliarios)
             {
+                Thread.Sleep(1000);
                 driver.Navigate().GoToUrl($"https://statusinvest.com.br/fundos-imobiliarios/{fundo}");
-                IndicadoresFundoImobiliario indicadoresFundo = MontarObjetoIndicadoresFundo.Montar(driver, fundo);
 
+                IndicadoresFundoImobiliario indicadoresFundo = MontarObjetoIndicadoresFundo.Montar(driver, fundo);
                 mensagem += $"\u2705  Fundo: {fundo.ToUpper()}; \n" +
                             $" • Valor Atual: R${indicadoresFundo.ValorAtual}; \n" +
                             $" • Min(52) Semanas: R${indicadoresFundo.Min52Semanas}; \n" +

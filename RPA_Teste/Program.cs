@@ -17,6 +17,7 @@ namespace RPA_Teste
             if (Aplication.EhPeriodoUtil())
             {
                 Task Cont = Aplication.Contador();
+
                 ChromeDriver driver = Launch.LaunchNavegador();
                 BuscarFundos.BuscarFundosImobiliarios(driver);
                 BuscarAcoes.Buscar(driver);
