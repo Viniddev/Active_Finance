@@ -31,6 +31,8 @@ namespace RPA_Teste.Pipes.Navegador.Acoes
                 Thread.Sleep(1000);
                 driver.Navigate().GoToUrl(@$"https://statusinvest.com.br/acoes/{acao}");
 
+                Aplication.WaitForTitle(driver);
+
                 IndicadoresAcoes indicadoresAcoes = MontarObjetoIndicadoresAcoes.Montar(driver, acao);
                 mensagem += $"\U0001F6A9 Ativo: {acao.ToUpper()}; \n" +
                             $" • Valor Atual: R${indicadoresAcoes.ValorAtual}; \n" +

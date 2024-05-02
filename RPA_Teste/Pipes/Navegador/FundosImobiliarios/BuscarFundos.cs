@@ -1,4 +1,6 @@
-﻿using OpenQA.Selenium.Chrome;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 using RPA_Teste.DataBase;
 using RPA_Teste.Models;
 using RPA_Teste.Pipes.Extracao;
@@ -33,6 +35,8 @@ namespace RPA_Teste.Pipes.Navegador.FundosImobiliarios
             {
                 Thread.Sleep(1000);
                 driver.Navigate().GoToUrl($"https://statusinvest.com.br/fundos-imobiliarios/{fundo}");
+
+                Aplication.WaitForTitle(driver);
 
                 IndicadoresFundoImobiliario indicadoresFundo = MontarObjetoIndicadoresFundo.Montar(driver, fundo);
                 mensagem += $"\u2705  Fundo: {fundo.ToUpper()}; \n" +

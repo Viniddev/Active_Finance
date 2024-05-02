@@ -1,6 +1,9 @@
 ﻿using System.Diagnostics;
 using System;
 using System.IO;
+using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium;
 
 namespace RPA_Teste
 {
@@ -25,6 +28,37 @@ namespace RPA_Teste
             processo.CloseMainWindow();
             processo.WaitForExit();
             Environment.Exit(1);
+        }
+        public static async Task ClosePopUp(ChromeDriver driver) 
+        {
+            Task cont = Task.Run(async () =>
+            {
+                while (ContadorLimiteTempo < 600)
+                {
+                    try 
+                    {
+                        new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(".//button[@class='btn-close']")));
+                        driver.FindElement(By.XPath(".//button[@class='btn-close']")).Click();
+                    }catch (Exception ex) 
+                    {
+                        Console.WriteLine("btn not exist");
+                    }
+                    await Task.Delay(1000);
+                }
+            });
+
+            await cont;
+        }
+        public static void WaitForTitle(ChromeDriver driver) 
+        {
+            try
+            {
+                new WebDriverWait(driver, TimeSpan.FromSeconds(1000)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(".//h1[@class='lh-4']")));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Element Name Exists");
+            }
         }
         public static bool EhPeriodoUtil()
         {
