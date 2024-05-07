@@ -1,4 +1,7 @@
-﻿using OpenQA.Selenium.Chrome;
+﻿using DocumentFormat.OpenXml.Presentation;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 using RPA_Teste.Pipes.Navegador;
 using RPA_Teste.Pipes.Navegador.Acoes;
 using RPA_Teste.Pipes.Navegador.FundosImobiliarios;
@@ -17,13 +20,13 @@ namespace RPA_Teste
             if (Aplication.EhPeriodoUtil())
             {
                 Task Cont = Aplication.Contador();
-
                 ChromeDriver driver = Launch.LaunchNavegador();
-                BuscarFundos.BuscarFundosImobiliarios(driver);
-                BuscarAcoes.Buscar(driver);
 
-                Telegram.TelegramApi.SendMessageAsync(" \u2705 Extraction Concluded, Chefão.").Wait();
-                Aplication.KillChromeDriver();
+
+                //BuscarFundos.BuscarFundosImobiliarios(driver);
+                //BuscarAcoes.Buscar(driver);
+                //Telegram.TelegramApi.SendMessageAsync(" \u2705 Extraction Concluded, Chefão.").Wait();
+                //Aplication.KillChromeDriver();
             }
         }
     }

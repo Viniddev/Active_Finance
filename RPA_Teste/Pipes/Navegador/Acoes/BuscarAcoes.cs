@@ -28,8 +28,20 @@ namespace RPA_Teste.Pipes.Navegador.Acoes
 
             foreach (string acao in acoes)
             {
-                Thread.Sleep(1000);
+                Console.WriteLine(acao);
                 driver.Navigate().GoToUrl(@$"https://statusinvest.com.br/acoes/{acao}");
+
+                try
+                {
+                    new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(".//h1[@class='lh-4']")));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("ex :: " + ex.ToString());
+                }
+
+                WebDriverWait espera = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+                espera.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.XPath(".//h1[@class='lh-4']")));
 
                 IndicadoresAcoes indicadoresAcoes = MontarObjetoIndicadoresAcoes.Montar(driver, acao);
                 mensagem += $"\U0001F6A9 Ativo: {acao.ToUpper()}; \n" +
