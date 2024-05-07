@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium.Chrome;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using OpenQA.Selenium.Chrome;
 using RPA_Teste.Pipes.Navegador;
 using RPA_Teste.Pipes.Navegador.Acoes;
 using RPA_Teste.Pipes.Navegador.FundosImobiliarios;
@@ -13,10 +14,10 @@ namespace RPA_Teste
 {
     public class Program
     {
+        public static bool ExecucaoFinalizou {  get; set; }
         public static async Task Main(string[] args)
         {
             int contadorErros = 0;
-            bool execucaoFinalizou = false;
 
             do
             {
@@ -25,21 +26,17 @@ namespace RPA_Teste
                     if (Aplication.EhPeriodoUtil())
                     {
                         ChromeDriver driver = Launch.LaunchNavegador();
-
                         Task Cont = Aplication.Contador();
                         Task CloseBtn = Aplication.ClosePopUp(driver);
 
-                        BuscarFundos.BuscarFundosImobiliarios(driver);
-                        BuscarAcoes.Buscar(driver);
+                        //BuscarFundos.BuscarFundosImobiliarios(driver);
+                        //BuscarAcoes.Buscar(driver);
 
+                        AlertaPrecoAcoes.CreateAlert();
                         Telegram.TelegramApi.SendMessageAsync(" \u2705 Extraction Concluded, Chefão.").Wait();
-
                     }
-                    else 
-                    {
-                        Telegram.TelegramApi.SendMessageAsync(" \u2705 Não é período útil, Chefão.").Wait();
-                    }
-                    execucaoFinalizou = true;
+                    Program.ExecucaoFinalizou = true;
+                    Console.WriteLine("processo finalizou");
                 }
                 catch (Exception ex) 
                 {
@@ -56,14 +53,13 @@ namespace RPA_Teste
                             break;
                     }
                 }
-            } while (!execucaoFinalizou && contadorErros < 10);
+            } while (!Program.ExecucaoFinalizou && contadorErros < 10);
 
             Aplication.KillChromeDriver();
-            Environment.Exit(0);
-
             Process processo = Process.GetCurrentProcess();
             processo.CloseMainWindow();
             processo.WaitForExit();
+            Environment.Exit(0);
         }
     }
 }

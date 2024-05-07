@@ -14,7 +14,7 @@ namespace RPA_Teste
         {
             Task cont = Task.Run(async () =>
             {
-                while (ContadorLimiteTempo < 600)
+                while (ContadorLimiteTempo < 600 && !Program.ExecucaoFinalizou)
                 {
                     ContadorLimiteTempo++;
                     await Task.Delay(1000);
@@ -23,21 +23,17 @@ namespace RPA_Teste
 
             await cont;
 
-            KillChromeDriver();
-            Process processo = Process.GetCurrentProcess();
-            processo.CloseMainWindow();
-            processo.WaitForExit();
-            Environment.Exit(1);
+            FinalizarProcesso();
         }
         public static async Task ClosePopUp(ChromeDriver driver) 
         {
             Task cont = Task.Run(async () =>
             {
-                while (ContadorLimiteTempo < 600)
+                while (ContadorLimiteTempo < 600 && !Program.ExecucaoFinalizou)
                 {
                     try 
                     {
-                        new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(".//button[@class='btn-close']")));
+                        new WebDriverWait(driver, TimeSpan.FromSeconds(1)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(".//button[@class='btn-close']")));
                         driver.FindElement(By.XPath(".//button[@class='btn-close']")).Click();
                     }catch (Exception ex) 
                     {
@@ -48,12 +44,13 @@ namespace RPA_Teste
             });
 
             await cont;
+
         }
         public static void WaitForTitle(ChromeDriver driver) 
         {
             try
             {
-                new WebDriverWait(driver, TimeSpan.FromSeconds(1000)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(".//h1[@class='lh-4']")));
+                new WebDriverWait(driver, TimeSpan.FromSeconds(3)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(".//h1[@class='lh-4']")));
             }
             catch (Exception ex)
             {
@@ -128,6 +125,16 @@ namespace RPA_Teste
             }
 
             return exitCode;
+        }
+
+        public static void FinalizarProcesso()
+        {
+            KillChromeDriver();
+            Process processo = Process.GetCurrentProcess();
+            processo.CloseMainWindow();
+            processo.WaitForExit();
+
+            Environment.Exit(0);
         }
     }
 }
