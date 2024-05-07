@@ -36,13 +36,8 @@ namespace RPA_Teste.Pipes.Navegador.FundosImobiliarios
                 Console.WriteLine(fundo);
                 driver.Navigate().GoToUrl($"https://statusinvest.com.br/fundos-imobiliarios/{fundo}");
 
-                try 
-                {
-                    new WebDriverWait(driver, TimeSpan.FromSeconds(50)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(".//*[@class='lh-4']")));
-                }catch (Exception ex) 
-                {
-                    Console.WriteLine("ex :: " + ex.ToString());
-                }
+
+                Aplication.WaitForTitle(driver);
 
                 IndicadoresFundoImobiliario indicadoresFundo = MontarObjetoIndicadoresFundo.Montar(driver, fundo);
                 mensagem += $"\u2705  Fundo: {fundo.ToUpper()}; \n" +
