@@ -14,9 +14,15 @@ namespace RPA_Teste
         {
             Task cont = Task.Run(async () =>
             {
-                while (ContadorLimiteTempo < 600 && !Program.ExecucaoFinalizou)
+                while (ContadorLimiteTempo < 600)
                 {
                     ContadorLimiteTempo++;
+
+                    if (Program.ExecucaoFinalizou) 
+                    {
+                        break;
+                    }
+
                     await Task.Delay(1000);
                 }
             });
@@ -29,7 +35,7 @@ namespace RPA_Teste
         {
             Task cont = Task.Run(async () =>
             {
-                while (ContadorLimiteTempo < 600 && !Program.ExecucaoFinalizou)
+                while (ContadorLimiteTempo < 600)
                 {
                     try 
                     {
@@ -37,8 +43,14 @@ namespace RPA_Teste
                         driver.FindElement(By.XPath(".//button[@class='btn-close']")).Click();
                     }catch (Exception ex) 
                     {
-                        Console.WriteLine("btn not exist");
+                        //Console.WriteLine("btn not exist");
                     }
+
+                    if (Program.ExecucaoFinalizou) 
+                    {
+                        break;
+                    }
+
                     await Task.Delay(1000);
                 }
             });
@@ -54,7 +66,7 @@ namespace RPA_Teste
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Element Name Exists");
+                //Console.WriteLine("Element Name Exists");
             }
         }
         public static bool EhPeriodoUtil()
@@ -130,9 +142,6 @@ namespace RPA_Teste
         public static void FinalizarProcesso()
         {
             KillChromeDriver();
-            Process processo = Process.GetCurrentProcess();
-            processo.CloseMainWindow();
-            processo.WaitForExit();
 
             Environment.Exit(0);
         }

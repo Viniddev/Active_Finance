@@ -6,19 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPA_Teste.Pipes.Navegador.Acoes
+namespace RPA_Teste.Pipes.Navegador.FundosImobiliarios
 {
-    internal class AlertaPrecoAcoes
+    internal class AlertaPrecoFundos
     {
-        public static void CreateAlert() 
+        public static void CreateAlert()
         {
-            //FAZ A CONSULTA
             ConectionDb conn = new ConectionDb();
-            var TabelaAnalitics = conn.Select(Consultas.GetPriceActionsAnalitics()).Tables[0];
+            var TabelaAnalitics = conn.Select(Consultas.GetPriceFundsAnalitics()).Tables[0];
 
-            string AlertMessage = $"\U0001F6A9 AÇÔES FAVORÁVEIS \U0001F6A9 \n\n";
+            string AlertMessage = $"\U0001F6A9 FUNDOS FAVORÁVEIS \U0001F6A9 \n\n";
 
-            foreach (DataRow datarow in TabelaAnalitics.Rows) 
+            foreach (DataRow datarow in TabelaAnalitics.Rows)
             {
                 if (Convert.ToDecimal(datarow[2]) != 0)
                 {
@@ -31,8 +30,6 @@ namespace RPA_Teste.Pipes.Navegador.Acoes
             }
             Telegram.TelegramApi.SendMessageAsync(AlertMessage).Wait();
 
-            //SE O RETORNO TIVER ALGUEM QUE É MENOR OU IGUAL MANDA MENSAGEM NO TELEGRAM
-            //SE NÃO TIVER, IGNORA
         }
     }
 }

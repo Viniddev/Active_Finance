@@ -15,12 +15,12 @@ namespace RPA_Teste.Pipes.Navegador.FundosImobiliarios
 {
     internal class BuscarFundos
     {
-        public static void BuscarFundosImobiliarios(ChromeDriver driver)
+        public static void Buscar(ChromeDriver driver)
         {
             ConectionDb conn = new ConectionDb();
-
             List<string> fundosImobiliarios = new List<string>();
             var TabelaFundos = conn.Select(Consultas.GetFundos()).Tables[0];
+
             foreach (DataRow item in TabelaFundos.Rows)
             {
                 fundosImobiliarios.Add(item[0].ToString());
@@ -29,18 +29,20 @@ namespace RPA_Teste.Pipes.Navegador.FundosImobiliarios
             GerenciamentoTabelasFIIs.CreateTable();
 
             string emojiVerde = char.ConvertFromUtf32(0x1F7E2);
-            string mensagem = $"   {emojiVerde} FUNDOS IMOBILIÁRIOS \n\n";
+            int contador = 0;
 
+            string mensagem = $"   {emojiVerde} FUNDOS IMOBILIÁRIOS \n\n";
+            string blocoAnexo = mensagem;
+
+            
             foreach (string fundo in fundosImobiliarios)
             {
-                Console.WriteLine(fundo);
                 driver.Navigate().GoToUrl($"https://statusinvest.com.br/fundos-imobiliarios/{fundo}");
-
-
+                IndicadoresFundoImobiliario indicadoresFundo = MontarObjetoIndicadoresFundo.Montar(driver, fundo);
                 Aplication.WaitForTitle(driver);
 
-                IndicadoresFundoImobiliario indicadoresFundo = MontarObjetoIndicadoresFundo.Montar(driver, fundo);
-                mensagem += $"\u2705  Fundo: {fundo.ToUpper()}; \n" +
+
+                string append = $"\u2705  Fundo: {fundo.ToUpper()}; \n" +
                             $" • Valor Atual: R${indicadoresFundo.ValorAtual}; \n" +
                             $" • Min(52) Semanas: R${indicadoresFundo.Min52Semanas}; \n" +
                             $" • Max(52) Semanas: R${indicadoresFundo.Max52Semanas}; \n" +
@@ -52,12 +54,25 @@ namespace RPA_Teste.Pipes.Navegador.FundosImobiliarios
                             $" • Data Pagamento: {indicadoresFundo.DataPagamento.ToString("dd/MM/yyyy")};" +
                             $"\n\n";
 
+                blocoAnexo += append;
+
+                if (contador < 3)
+                {
+                    mensagem += append;
+                }
+
                 GerenciamentoTabelasFIIs.PopulateTable(indicadoresFundo);
+                contador++;
+            }
+
+            if (contador > 3) 
+            {
+                mensagem += $"\U0001F6D1 RELATORIO COMPLETO NO ANEXO... \U0001F6D1";
             }
 
             conn.Bulky(GerenciamentoTabelasFIIs.TabelaFII, "[ACTIVE_FINANCE].[DBO].[EXTRACOESFUNDOIMOBILIARIO]", 2);
             Telegram.TelegramApi.SendMessageAsync(mensagem).Wait();
-            Telegram.TelegramApi.SendLogText(mensagem, "Fundos").Wait();
+            Telegram.TelegramApi.SendLogText(blocoAnexo, "Fundos").Wait();
         }
     }
 }

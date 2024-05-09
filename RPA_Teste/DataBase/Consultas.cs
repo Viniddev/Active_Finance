@@ -22,7 +22,7 @@ namespace RPA_Teste.DataBase
                 WHERE [STATUS] = 1
             ";
         }
-        public static string GetPriceAnalitics() 
+        public static string GetPriceActionsAnalitics() 
         {
             return @" 
                 SELECT A.NOME, A.VALORATUAL, B.PRECODESEJADO
@@ -31,6 +31,20 @@ namespace RPA_Teste.DataBase
                 INNER JOIN (
                     SELECT NOME, MAX(LASTINSERTION) AS MaxData
                     FROM ACTIVE_FINANCE.DBO.EXTRACOESACOES
+                    GROUP BY NOME
+                ) AS MaxDates ON A.NOME = MaxDates.NOME AND A.LASTINSERTION = MaxDates.MaxData;
+            ";
+        }
+
+        public static string GetPriceFundsAnalitics()
+        {
+            return @" 
+                SELECT A.NOME, A.VALORATUAL, B.PRECODESEJADO
+                FROM ACTIVE_FINANCE.DBO.[EXTRACOESFUNDOIMOBILIARIO] AS A
+                LEFT JOIN ACTIVE_FINANCE.DBO.[FUNDOSIMOBILIARIOS] AS B ON A.NOME = B.NOME
+                INNER JOIN (
+                    SELECT NOME, MAX(LASTINSERTION) AS MaxData
+                    FROM ACTIVE_FINANCE.DBO.[EXTRACOESFUNDOIMOBILIARIO]
                     GROUP BY NOME
                 ) AS MaxDates ON A.NOME = MaxDates.NOME AND A.LASTINSERTION = MaxDates.MaxData;
             ";
