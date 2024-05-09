@@ -24,8 +24,8 @@ namespace RPA_Teste.Pipes.Navegador.Acoes
                 {
                     if (Convert.ToDecimal(datarow[1]) <= Convert.ToDecimal(datarow[2]))
                         AlertMessage += $"\u2705 {datarow[0].ToString()} \n" +
-                                        $" • Preço Atual: {datarow[1].ToString()} \n" +
-                                        $" • Preço Desejado: {datarow[2].ToString()} " +
+                                        $" • Preço Atual: R$ {datarow[1].ToString()} \n" +
+                                        $" • Preço Desejado: R$ {datarow[2].ToString()} " +
                                         $"\n\n";
                 }
             }
