@@ -10,6 +10,7 @@ namespace RPA_Teste
     internal class Aplication
     {
         public static int ContadorLimiteTempo { get; set; }
+
         public static async Task Contador()
         {
             Task cont = Task.Run(async () =>
@@ -138,7 +139,6 @@ namespace RPA_Teste
 
             return exitCode;
         }
-
         public static void FinalizarProcesso()
         {
             KillChromeDriver();

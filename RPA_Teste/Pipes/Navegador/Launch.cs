@@ -28,6 +28,7 @@ namespace RPA_Teste.Pipes.Navegador
             opt.AddArgument("--disable-dev-shm-usage");
             opt.AddArgument("--ignore-certificate-errors");
             opt.AddArgument("--ignore-ssl-errors");
+            //opt.AddArgument("--headless");
             opt.AddUserProfilePreference("download.default_directory", pathDownload);
 
             new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);

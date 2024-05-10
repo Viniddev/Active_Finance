@@ -9,7 +9,7 @@ using Telegram.Bot.Types;
 
 namespace RPA_Teste.Telegram
 {
-    internal class TelegramApi
+    public class TelegramApi
     {
         private static TelegramBotClient _botClient = new TelegramBotClient("7138305614:AAF2KBe6uMKdxZxHG4aeYbSZc2n5A8hzs_Y");
         private static long chatId = -1002090888464;
@@ -51,34 +51,25 @@ namespace RPA_Teste.Telegram
 
         public static async Task SendLogText(string message, string tipo)
         {
-            try
+            var filePath = $@"{AppDomain.CurrentDomain.BaseDirectory}LogTxt\Relatorio.txt";
+
+            using (StreamWriter writer = new StreamWriter(filePath, false))
             {
-                var filePath = $@"{AppDomain.CurrentDomain.BaseDirectory}LogTxt\Relatorio.txt";
-
-                using (StreamWriter writer = new StreamWriter(filePath, false))
-                {
-                    writer.Write(message);
-                    writer.Close();
-                }
-
-                using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-                {
-
-                    var fileName = $"Relatorio_{tipo}.txt";
-                    await _botClient.SendDocumentAsync(
-                        chatId: chatId,
-                        document: InputFile.FromStream(stream: fs, fileName: fileName),
-                        caption: $"Informações atualizadas sobre {tipo}."
-                    );
-                };
-
+                writer.Write(message);
+                writer.Close();
             }
-            catch (Exception ex)
+
+            using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {
-                Console.WriteLine(ex.ToString());
-                Console.WriteLine("\n--------------------------------------------------------------------------\n");
-                Console.WriteLine(ex.StackTrace);
-            }
+
+                var fileName = $"Relatorio_{tipo}.txt";
+                await _botClient.SendDocumentAsync(
+                    chatId: chatId,
+                    document: InputFile.FromStream(stream: fs, fileName: fileName),
+                    caption: $"Informações atualizadas sobre {tipo}."
+                );
+            };
+
         }
     }
 }

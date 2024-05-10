@@ -58,10 +58,6 @@ namespace RPA_Teste
             } while (!Program.ExecucaoFinalizou && contadorErros < 10);
 
             Aplication.KillChromeDriver();
-            Process processo = Process.GetCurrentProcess();
-            processo.CloseMainWindow();
-            processo.WaitForExit();
-
             Environment.Exit(0);
         }
     }
