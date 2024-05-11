@@ -1,7 +1,9 @@
-﻿using OpenQA.Selenium.Chrome;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using OpenQA.Selenium.Chrome;
 using RPA_Teste.Pipes.Navegador;
 using RPA_Teste.Pipes.Navegador.Acoes;
 using RPA_Teste.Pipes.Navegador.FundosImobiliarios;
+using System.Diagnostics;
 
 /*
     Espaço para estudar sobre automação
@@ -12,21 +14,49 @@ namespace RPA_Teste
 {
     public class Program
     {
+        public static bool ExecucaoFinalizou { get; set; } = false;
         public static async Task Main(string[] args)
         {
-            //if (Aplication.EhPeriodoUtil())
-            //{
-                ChromeDriver driver = Launch.LaunchNavegador();
+            int contadorErros = 0;
+            do
+            {
+                try
+                {
+                    if (Aplication.EhPeriodoUtil())
+                    {
+                        ChromeDriver driver = Launch.LaunchNavegador();
+                        Task Cont = Aplication.Contador();
+                        Task CloseBtn = Aplication.ClosePopUp(driver);
 
-                Task Cont = Aplication.Contador();
-                Task ClosePopUp = Aplication.ClosePopUp(driver);
+                        BuscarFundos.Buscar(driver);
+                        AlertaPrecoFundos.CreateAlert();
+                        BuscarAcoes.Buscar(driver);
+                        AlertaPrecoAcoes.CreateAlert();
 
-                BuscarFundos.BuscarFundosImobiliarios(driver);
-                BuscarAcoes.Buscar(driver);
+                        Telegram.TelegramApi.SendMessageAsync(" \u2705 Extraction Concluded, Chefão.").Wait();
+                    }
+                    Program.ExecucaoFinalizou = true;
+                    Console.WriteLine("Process Concluded");
+                }
+                catch (Exception ex)
+                {
+                    string TextError = ex.Message.ToString();
+                    contadorErros++;
 
-                Telegram.TelegramApi.SendMessageAsync(" \u2705 Extraction Concluded, Chefão.").Wait();
-                Aplication.KillChromeDriver();
-            //}
+                    switch (TextError)
+                    {
+                        case string erro when erro.Contains("Não conectou ao BD"):
+                            Console.WriteLine("Não conectou ao BD");
+                            break;
+                        default:
+                            Console.WriteLine("ERRO :: " + ex.ToString());
+                            break;
+                    }
+                }
+            } while (!Program.ExecucaoFinalizou && contadorErros < 10);
+
+            Aplication.KillChromeDriver();
+            Environment.Exit(0);
         }
     }
 }

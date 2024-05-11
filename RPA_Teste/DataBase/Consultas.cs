@@ -8,26 +8,6 @@ namespace RPA_Teste.DataBase
 {
     internal class Consultas
     {
-        public static string InsertAcoes(double ValorAtual, double min52sem, double max52sem, double dy, double valorizacao, double precolucro, double pvp, double vpa, double lpa, double dividaLiquida, double margembruta, double retorno)
-        {
-            return $@"
-                INSERT INTO ACTIVE_FINANCE.DBO.EXTRACOESACOES VALUES (
-	                {ValorAtual},
-                    {min52sem},
-                    {max52sem},
-                    {dy},
-                    {valorizacao},
-                    {precolucro},
-                    {pvp},
-                    {vpa},
-                    {lpa},
-                    {dividaLiquida},
-                    {margembruta},
-                    {retorno}
-                )
-            ;";
-        }
-
         public static string GetFundos() 
         {
             return @"
@@ -40,6 +20,33 @@ namespace RPA_Teste.DataBase
             return @"
                 SELECT NOME FROM [ACTIVE_FINANCE].[DBO].[ACOES]
                 WHERE [STATUS] = 1
+            ";
+        }
+        public static string GetPriceActionsAnalitics() 
+        {
+            return @" 
+                SELECT A.NOME, A.VALORATUAL, B.PRECODESEJADO
+                FROM ACTIVE_FINANCE.DBO.EXTRACOESACOES AS A
+                LEFT JOIN ACTIVE_FINANCE.DBO.ACOES AS B ON A.NOME = B.NOME
+                INNER JOIN (
+                    SELECT NOME, MAX(LASTINSERTION) AS MaxData
+                    FROM ACTIVE_FINANCE.DBO.EXTRACOESACOES
+                    GROUP BY NOME
+                ) AS MaxDates ON A.NOME = MaxDates.NOME AND A.LASTINSERTION = MaxDates.MaxData;
+            ";
+        }
+
+        public static string GetPriceFundsAnalitics()
+        {
+            return @" 
+                SELECT A.NOME, A.VALORATUAL, B.PRECODESEJADO
+                FROM ACTIVE_FINANCE.DBO.[EXTRACOESFUNDOIMOBILIARIO] AS A
+                LEFT JOIN ACTIVE_FINANCE.DBO.[FUNDOSIMOBILIARIOS] AS B ON A.NOME = B.NOME
+                INNER JOIN (
+                    SELECT NOME, MAX(LASTINSERTION) AS MaxData
+                    FROM ACTIVE_FINANCE.DBO.[EXTRACOESFUNDOIMOBILIARIO]
+                    GROUP BY NOME
+                ) AS MaxDates ON A.NOME = MaxDates.NOME AND A.LASTINSERTION = MaxDates.MaxData;
             ";
         }
     }

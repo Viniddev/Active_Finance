@@ -13,10 +13,9 @@ namespace RPA_Teste.Pipes.Navegador.Acoes
         public static void Buscar(ChromeDriver driver)
         {
             ConectionDb conn = new ConectionDb();
-            List<IndicadoresAcoes> listaDeAcoes = new List<IndicadoresAcoes>();
             List<string> acoes = new List<string>();
-
             var TabelaAcoes = conn.Select(Consultas.GetAcoes()).Tables[0];
+
             foreach (DataRow item in TabelaAcoes.Rows)
             {
                 acoes.Add(item[0].ToString());
@@ -25,16 +24,18 @@ namespace RPA_Teste.Pipes.Navegador.Acoes
 
             string emojiVermelho = char.ConvertFromUtf32(0x1F534);
             string mensagem = $"  {emojiVermelho} AÇÕES \n\n";
+            string blocoAnexo = mensagem;
+            int contador = 0;
+
 
             foreach (string acao in acoes)
             {
-                Thread.Sleep(1000);
+
                 driver.Navigate().GoToUrl(@$"https://statusinvest.com.br/acoes/{acao}");
-
                 Aplication.WaitForTitle(driver);
-
                 IndicadoresAcoes indicadoresAcoes = MontarObjetoIndicadoresAcoes.Montar(driver, acao);
-                mensagem += $"\U0001F6A9 Ativo: {acao.ToUpper()}; \n" +
+
+                string append = $"\U0001F6A9 Ativo: {acao.ToUpper()}; \n" +
                             $" • Valor Atual: R${indicadoresAcoes.ValorAtual}; \n" +
                             $" • VPA: R${indicadoresAcoes.ValorPatrimonialPorAcao}; \n" +
                             $" • Min(52) Semanas: R${indicadoresAcoes.Min52Semanas}; \n" +
@@ -47,12 +48,24 @@ namespace RPA_Teste.Pipes.Navegador.Acoes
                             $" • ROE: {indicadoresAcoes.RetornoSobrePatrimonioLiquido};" +
                             $"\n\n";
 
-                listaDeAcoes.Add(indicadoresAcoes);
+                blocoAnexo += append;
+                if (contador < 3) 
+                {
+                    mensagem+= append;
+                }
                 GerenciamentoDeTabelasAcoes.PopulateTable(indicadoresAcoes);
+                contador++;
             }
+
+
+            if (contador > 3)
+            {
+                mensagem += $"\U0001F6D1 RELATORIO COMPLETO NO ANEXO... \U0001F6D1";
+            }
+
             conn.Bulky(GerenciamentoDeTabelasAcoes.TabelaAcoes, "[ACTIVE_FINANCE].[DBO].[EXTRACOESACOES]", 2);
             Telegram.TelegramApi.SendMessageAsync(mensagem).Wait();
-            Telegram.TelegramApi.SendLogText(mensagem, "Acoes").Wait();
+            Telegram.TelegramApi.SendLogText(blocoAnexo, "Acoes").Wait();
         }
     }
 }

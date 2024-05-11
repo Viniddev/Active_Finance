@@ -7,13 +7,18 @@ using RPA_Teste.Models;
 
 namespace RPA_Teste.Pipes.Excel
 {
+
+    /*
+        refazer os metodos para substituir o log em txt para log xlsx
+     */
+
+
     public class Excel
     {
-        public static void InserirIndicadores(IReadOnlyCollection<IWebElement> valoresAcao, ChromeDriver driver) 
+        public static void InserirIndicadores(IReadOnlyCollection<IWebElement> valoresAcao, ChromeDriver driver, string tipo = "Ativo") 
         {
             IWebElement nomeAcao = driver.FindElement(By.XPath("//*[@id='tickerName']"));
-
-            string caminho = AppDomain.CurrentDomain.BaseDirectory + @"Acoes.xlsx";
+            string caminho = AppDomain.CurrentDomain.BaseDirectory + $@"{tipo}.xlsx";
 
             try
             {
