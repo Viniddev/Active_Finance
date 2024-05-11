@@ -14,19 +14,19 @@ namespace RPA_Teste
     {
         public static async Task Main(string[] args)
         {
-            if (Aplication.EhPeriodoUtil())
-            {
+            //if (Aplication.EhPeriodoUtil())
+            //{
                 ChromeDriver driver = Launch.LaunchNavegador();
 
                 Task Cont = Aplication.Contador();
-                Task CloseBtn = Aplication.ClosePopUp(driver);
+                Task ClosePopUp = Aplication.ClosePopUp(driver);
 
                 BuscarFundos.BuscarFundosImobiliarios(driver);
                 BuscarAcoes.Buscar(driver);
 
                 Telegram.TelegramApi.SendMessageAsync(" \u2705 Extraction Concluded, Chefão.").Wait();
                 Aplication.KillChromeDriver();
-            }
+            //}
         }
     }
 }

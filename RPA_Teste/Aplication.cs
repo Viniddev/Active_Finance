@@ -31,7 +31,7 @@ namespace RPA_Teste
         }
         public static async Task ClosePopUp(ChromeDriver driver) 
         {
-            Task cont = Task.Run(async () =>
+            Task task = Task.Run(async () =>
             {
                 while (ContadorLimiteTempo < 600)
                 {
@@ -41,13 +41,12 @@ namespace RPA_Teste
                         driver.FindElement(By.XPath(".//button[@class='btn-close']")).Click();
                     }catch (Exception ex) 
                     {
-                        Console.WriteLine("btn not exist");
+                        //Console.WriteLine("btn not exist");
                     }
-                    await Task.Delay(1000);
                 }
             });
 
-            await cont;
+            await task;
         }
         public static void WaitForTitle(ChromeDriver driver) 
         {
