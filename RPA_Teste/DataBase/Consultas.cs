@@ -83,11 +83,7 @@ namespace RPA_Teste.DataBase
         public static string InsertAcoes(string nome, string preco, int status)
         {
             return $@" 
-               INSERT INTO [ACTIVE_FINANCE].[DBO].[ACOES] VALUES(
-	                '{nome}',
-	                 {preco},
-	                 {status}
-                )
+               INSERT INTO [ACTIVE_FINANCE].[DBO].[ACOES] ([NOME], [PRECODESEJADO], [STATUS]) VALUES('{nome}', {preco}, {status})
             ";
         }
         public static string UpdateFundos(string nome, string preco, int status)
@@ -102,11 +98,7 @@ namespace RPA_Teste.DataBase
         public static string InsertFundos(string nome, string preco, int status)
         {
             return $@" 
-               INSERT INTO [ACTIVE_FINANCE].[DBO].[FUNDOSIMOBILIARIOS] VALUES(
-	                '{nome}',
-	                 {preco},
-	                 {status}
-                )
+               INSERT INTO [ACTIVE_FINANCE].[DBO].[FUNDOSIMOBILIARIOS] ([NOME], [PRECODESEJADO], [STATUS]) VALUES('{nome}', {preco}, {status})
             ";
         }
     }

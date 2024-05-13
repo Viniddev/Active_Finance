@@ -23,10 +23,10 @@ namespace RPA_Teste
             {
                 try
                 {
-                    ReadNews.ReadExcel();
-
                     if (Aplication.EhPeriodoUtil())
                     {
+                        ReadNews.ReadExcel();
+
                         ChromeDriver driver = Launch.LaunchNavegador();
                         Task Cont = Aplication.Contador();
                         Task CloseBtn = Aplication.ClosePopUp(driver);
@@ -38,6 +38,12 @@ namespace RPA_Teste
 
                         Telegram.TelegramApi.SendMessageAsync(" \u2705 Extraction Concluded, Chefão.").Wait();
                     }
+                    else 
+                    {
+                        Telegram.TelegramApi.SendMessageAsync(" \U0001f6d1 Fora Do Horário util").Wait();
+                    }
+
+
                     Program.ExecucaoFinalizou = true;
                 }
                 catch (Exception ex)
