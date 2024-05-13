@@ -44,7 +44,7 @@ namespace RPA_Teste
                         driver.FindElement(By.XPath(".//button[@class='btn-close']")).Click();
                     }catch (Exception ex) 
                     {
-                        //Console.WriteLine("btn not exist");
+                        continue;
                     }
                 }
             });
@@ -58,7 +58,7 @@ namespace RPA_Teste
             }
             catch (Exception ex)
             {
-                //Console.WriteLine("Element Name Exists");
+                Console.WriteLine("Title not found");
             }
         }
         public static bool EhPeriodoUtil()
