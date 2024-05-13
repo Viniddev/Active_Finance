@@ -32,9 +32,8 @@ namespace RPA_Teste
                         Task CloseBtn = Aplication.ClosePopUp(driver);
 
                         BuscarFundos.Buscar(driver);
-                        AlertaPrecoFundos.CreateAlert();
-
                         BuscarAcoes.Buscar(driver);
+                        AlertaPrecoFundos.CreateAlert();
                         AlertaPrecoAcoes.CreateAlert();
 
                         Telegram.TelegramApi.SendMessageAsync(" \u2705 Extraction Concluded, Chefão.").Wait();

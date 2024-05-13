@@ -11,16 +11,31 @@ namespace RPA_Teste.Pipes.Excel
     {
         private static IXLWorkbook Wb;
         private static IXLWorksheet Ws;
+        private static DataTable Ativos, dataResultBd;
 
         public static void ReadExcel()
         {
             ConectionDb conn = new ConectionDb();
-            DataTable Ativos = new DataTable();
+           
+            string filepath = $@"{System.AppDomain.CurrentDomain.BaseDirectory}NewsPath\Input.xlsx";
+            Ativos = new DataTable();
             Ativos.Columns.Add("Name");
             Ativos.Columns.Add("Price");
             Ativos.Columns.Add("Status");
 
-            string filepath = $@"{System.AppDomain.CurrentDomain.BaseDirectory}NewsPath\Input.xlsx";
+            ExtracAcoesBdAndExcel(conn, filepath);
+            CompareAcoesBdAndExcel(dataResultBd, Ativos);
+
+            dataResultBd.Clear();
+            Ativos.Clear();
+
+            ExtractFundosBdAndExcel(conn, filepath);
+            CompareFundosBdAndExcel(dataResultBd, Ativos);
+
+        }
+
+        private static void ExtracAcoesBdAndExcel(ConectionDb conn, string filepath)
+        {
             Wb = new XLWorkbook(filepath);
             Ws = Wb.Worksheet("Acoes");
 
@@ -41,18 +56,14 @@ namespace RPA_Teste.Pipes.Excel
                 }
             }
 
-
-            DataTable dataResultBd = conn.Select(Consultas.GetAcoes(false)).Tables[0];
-            CompareAndInsertAcoes(dataResultBd, Ativos);
-
-
+            dataResultBd = conn.Select(Consultas.GetAcoes(false)).Tables[0];
             Wb.Save();
-            dataResultBd.Clear();
-            Ativos.Clear();
+        }
 
-            filepath = $@"{System.AppDomain.CurrentDomain.BaseDirectory}NewsPath\Input.xlsx";
+        private static void ExtractFundosBdAndExcel(ConectionDb conn, string filepath)
+        {
             Wb = new XLWorkbook(filepath);
-            Ws = Wb.Worksheet("Fundos");    
+            Ws = Wb.Worksheet("Fundos");
 
             foreach (var row in Ws.RowsUsed())
             {
@@ -72,13 +83,12 @@ namespace RPA_Teste.Pipes.Excel
             }
 
             dataResultBd = conn.Select(Consultas.GetFundos(false)).Tables[0];
-            CompareAndInsertFundos(dataResultBd, Ativos);
+            Wb.Save();
         }
 
-        public static void CompareAndInsertAcoes(DataTable dataResultBd, DataTable Ativos) 
+        public static void CompareAcoesBdAndExcel(DataTable dataResultBd, DataTable Ativos) 
         {
             ConectionDb conn = new ConectionDb();
-            DataTable resultComparison = new DataTable();
 
             bool existenobd = false;
             foreach (DataRow rowAtivos in Ativos.Rows)
@@ -91,23 +101,25 @@ namespace RPA_Teste.Pipes.Excel
                     }
                 }
 
-                if (existenobd)
-                {
-                    Console.WriteLine("Existe " + rowAtivos[0].ToString());
-                    conn.ExecuteQuery(Consultas.UpdateAcoes(rowAtivos[0].ToString().ToUpper(), rowAtivos[1].ToString(), Convert.ToInt16(rowAtivos[2])));
-                }
-                else
-                {
-                    Console.WriteLine("Nao existe " + rowAtivos[0].ToString());
-                    conn.ExecuteQuery(Consultas.InsertAcoes(rowAtivos[0].ToString().ToUpper(), rowAtivos[1].ToString(), Convert.ToInt16(rowAtivos[2])));
-                }
+                InsertAcoes(conn, existenobd, rowAtivos);
             }
-            Console.WriteLine("\n--- --- --- --- --- --- --- ---\n");
         }
-        public static void CompareAndInsertFundos(DataTable dataResultBd, DataTable Ativos)
+
+        private static void InsertAcoes(ConectionDb conn, bool existenobd, DataRow rowAtivos)
+        {
+            if (existenobd)
+            {
+                conn.ExecuteQuery(Consultas.UpdateAcoes(rowAtivos[0].ToString().ToUpper(), rowAtivos[1].ToString(), Convert.ToInt16(rowAtivos[2])));
+            }
+            else
+            {
+                conn.ExecuteQuery(Consultas.InsertAcoes(rowAtivos[0].ToString().ToUpper(), rowAtivos[1].ToString(), Convert.ToInt16(rowAtivos[2])));
+            }
+        }
+
+        public static void CompareFundosBdAndExcel(DataTable dataResultBd, DataTable Ativos)
         {
             ConectionDb conn = new ConectionDb();
-            DataTable resultComparison = new DataTable();
 
             bool existenobd = false;
             foreach (DataRow rowAtivos in Ativos.Rows)
@@ -120,18 +132,20 @@ namespace RPA_Teste.Pipes.Excel
                     }
                 }
 
-                if (existenobd)
-                {
-                    Console.WriteLine("Existe " + rowAtivos[0].ToString());
-                    conn.ExecuteQuery(Consultas.UpdateFundos(rowAtivos[0].ToString().ToUpper(), rowAtivos[1].ToString(), Convert.ToInt16(rowAtivos[2])));
-                }
-                else
-                {
-                    Console.WriteLine("Nao existe " + rowAtivos[0].ToString());
-                    conn.ExecuteQuery(Consultas.InsertFundos(rowAtivos[0].ToString().ToUpper(), rowAtivos[1].ToString(), Convert.ToInt16(rowAtivos[2])));
-                }
+                InsertFundos(conn, existenobd, rowAtivos);
             }
-            Console.WriteLine("\n--- --- --- --- --- --- --- ---\n");
+        }
+
+        private static void InsertFundos(ConectionDb conn, bool existenobd, DataRow rowAtivos)
+        {
+            if (existenobd)
+            {
+                conn.ExecuteQuery(Consultas.UpdateFundos(rowAtivos[0].ToString().ToUpper(), rowAtivos[1].ToString(), Convert.ToInt16(rowAtivos[2])));
+            }
+            else
+            {
+                conn.ExecuteQuery(Consultas.InsertFundos(rowAtivos[0].ToString().ToUpper(), rowAtivos[1].ToString(), Convert.ToInt16(rowAtivos[2])));
+            }
         }
     }
 }
