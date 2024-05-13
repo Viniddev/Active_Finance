@@ -4,6 +4,7 @@ using OpenQA.Selenium.Support.UI;
 using RPA_Teste.DataBase;
 using RPA_Teste.Models;
 using RPA_Teste.Pipes.Extracao;
+using RPA_Teste.Pipes.Telegram;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -71,8 +72,8 @@ namespace RPA_Teste.Pipes.Navegador.FundosImobiliarios
             }
 
             conn.Bulky(GerenciamentoTabelasFIIs.TabelaFII, "[ACTIVE_FINANCE].[DBO].[EXTRACOESFUNDOIMOBILIARIO]", 2);
-            Telegram.TelegramApi.SendMessageAsync(mensagem).Wait();
-            Telegram.TelegramApi.SendLogText(blocoAnexo, "Fundos").Wait();
+            TelegramApi.SendMessageAsync(mensagem).Wait();
+            TelegramApi.SendLogText(blocoAnexo, "Fundos").Wait();
         }
     }
 }

@@ -4,6 +4,7 @@ using RPA_Teste.Pipes.Excel;
 using RPA_Teste.Pipes.Navegador;
 using RPA_Teste.Pipes.Navegador.Acoes;
 using RPA_Teste.Pipes.Navegador.FundosImobiliarios;
+using RPA_Teste.Pipes.Telegram;
 using System.Diagnostics;
 
 /*
@@ -36,11 +37,11 @@ namespace RPA_Teste
                         AlertaPrecoFundos.CreateAlert();
                         AlertaPrecoAcoes.CreateAlert();
 
-                        Telegram.TelegramApi.SendMessageAsync(" \u2705 Extraction Concluded, Chefão.").Wait();
+                        TelegramApi.SendMessageAsync(" \u2705 Extraction Concluded, Chefão.").Wait();
                     }
                     else 
                     {
-                        Telegram.TelegramApi.SendMessageAsync(" \U0001f6d1 Fora Do Horário util").Wait();
+                        TelegramApi.SendMessageAsync(" \U0001f6d1 Fora Do Horário util").Wait();
                     }
 
 

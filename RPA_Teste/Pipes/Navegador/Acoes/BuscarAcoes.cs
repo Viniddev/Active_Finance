@@ -4,6 +4,7 @@ using OpenQA.Selenium.Support.UI;
 using RPA_Teste.DataBase;
 using RPA_Teste.Models;
 using RPA_Teste.Pipes.Extracao;
+using RPA_Teste.Pipes.Telegram;
 using System.Data;
 
 namespace RPA_Teste.Pipes.Navegador.Acoes
@@ -64,8 +65,8 @@ namespace RPA_Teste.Pipes.Navegador.Acoes
             }
 
             conn.Bulky(GerenciamentoDeTabelasAcoes.TabelaAcoes, "[ACTIVE_FINANCE].[DBO].[EXTRACOESACOES]", 2);
-            Telegram.TelegramApi.SendMessageAsync(mensagem).Wait();
-            Telegram.TelegramApi.SendLogText(blocoAnexo, "Acoes").Wait();
+            TelegramApi.SendMessageAsync(mensagem).Wait();
+            TelegramApi.SendLogText(blocoAnexo, "Acoes").Wait();
         }
     }
 }

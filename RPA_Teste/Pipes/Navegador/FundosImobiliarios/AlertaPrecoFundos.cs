@@ -1,4 +1,5 @@
 ﻿using RPA_Teste.DataBase;
+using RPA_Teste.Pipes.Telegram;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -28,7 +29,7 @@ namespace RPA_Teste.Pipes.Navegador.FundosImobiliarios
                                         $"\n\n";
                 }
             }
-            Telegram.TelegramApi.SendMessageAsync(AlertMessage).Wait();
+            TelegramApi.SendMessageAsync(AlertMessage).Wait();
 
         }
     }

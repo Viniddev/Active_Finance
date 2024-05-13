@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace RPA_Teste.Telegram
+namespace RPA_Teste.Pipes.Telegram
 {
     public class TelegramApi
     {
