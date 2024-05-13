@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RPA_Teste.Pipes.Extracao
 {
-    internal class FormatacaoDados
+    public class FormatacaoDados
     {
         public static DateTime ConvertDate(string data)
         {
@@ -28,6 +28,15 @@ namespace RPA_Teste.Pipes.Extracao
             else
                 throw new Exception("Não foi possivel formatar");
 
+        }
+        public static decimal ConvertToDecimal(string value)
+        {
+            value = !value.Equals("0.00") ? value.Replace(".", ",") : value;
+
+            if (decimal.TryParse(value, out decimal formatado))
+                return formatado;
+            else
+                throw new Exception("Não foi possivel formatar");
         }
     }
 }

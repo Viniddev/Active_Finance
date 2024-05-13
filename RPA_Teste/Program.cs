@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Bibliography;
 using OpenQA.Selenium.Chrome;
+using RPA_Teste.Pipes.Excel;
 using RPA_Teste.Pipes.Navegador;
 using RPA_Teste.Pipes.Navegador.Acoes;
 using RPA_Teste.Pipes.Navegador.FundosImobiliarios;
@@ -22,6 +23,8 @@ namespace RPA_Teste
             {
                 try
                 {
+                    ReadNews.ReadExcel();
+
                     if (Aplication.EhPeriodoUtil())
                     {
                         ChromeDriver driver = Launch.LaunchNavegador();
@@ -30,18 +33,19 @@ namespace RPA_Teste
 
                         BuscarFundos.Buscar(driver);
                         AlertaPrecoFundos.CreateAlert();
+
                         BuscarAcoes.Buscar(driver);
                         AlertaPrecoAcoes.CreateAlert();
 
                         Telegram.TelegramApi.SendMessageAsync(" \u2705 Extraction Concluded, Chefão.").Wait();
                     }
                     Program.ExecucaoFinalizou = true;
-                    Console.WriteLine("Process Concluded");
                 }
                 catch (Exception ex)
                 {
                     string TextError = ex.Message.ToString();
                     contadorErros++;
+                    Console.ReadLine();
 
                     switch (TextError)
                     {
