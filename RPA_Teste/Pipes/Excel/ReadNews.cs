@@ -95,9 +95,18 @@ namespace RPA_Teste.Pipes.Excel
             {
                 foreach (DataRow rowDataResultBd in dataResultBd.Rows)
                 {
-                    if (rowAtivos[0].ToString().ToUpper().Equals(rowDataResultBd[0].ToString()))
+                    Console.WriteLine($"{rowAtivos[0].ToString().ToUpper()} | {rowDataResultBd[0].ToString()}");
+
+
+
+                    if (rowAtivos[0].ToString().ToUpper().Equals(rowDataResultBd[0].ToString().ToString()))
                     {
                         existenobd = true;
+                        break;
+                    }
+                    else 
+                    {
+                        existenobd = false;
                     }
                 }
 
@@ -109,10 +118,12 @@ namespace RPA_Teste.Pipes.Excel
         {
             if (existenobd)
             {
+                Console.WriteLine($"Existia no bd: {rowAtivos[0].ToString().ToUpper()}");
                 conn.ExecuteQuery(Consultas.UpdateAcoes(rowAtivos[0].ToString().ToUpper(), rowAtivos[1].ToString(), Convert.ToInt16(rowAtivos[2])));
             }
             else
             {
+                Console.WriteLine($"Não existia no bd: {rowAtivos[0].ToString().ToUpper()}");
                 conn.ExecuteQuery(Consultas.InsertAcoes(rowAtivos[0].ToString().ToUpper(), rowAtivos[1].ToString(), Convert.ToInt16(rowAtivos[2])));
             }
         }
@@ -126,9 +137,16 @@ namespace RPA_Teste.Pipes.Excel
             {
                 foreach (DataRow rowDataResultBd in dataResultBd.Rows)
                 {
-                    if (rowAtivos[0].ToString().ToUpper().Equals(rowDataResultBd[0].ToString()))
+                    Console.WriteLine($"{rowAtivos[0].ToString().ToUpper()} | {rowDataResultBd[0].ToString()}");
+
+                    if (rowAtivos[0].ToString().ToUpper().Equals(rowDataResultBd[0].ToString().ToString()))
                     {
                         existenobd = true;
+                        break;
+                    }
+                    else 
+                    {
+                        existenobd = false;
                     }
                 }
 
@@ -140,10 +158,12 @@ namespace RPA_Teste.Pipes.Excel
         {
             if (existenobd)
             {
+                Console.WriteLine($"Existia no bd: {rowAtivos[0].ToString().ToUpper()}");
                 conn.ExecuteQuery(Consultas.UpdateFundos(rowAtivos[0].ToString().ToUpper(), rowAtivos[1].ToString(), Convert.ToInt16(rowAtivos[2])));
             }
             else
             {
+                Console.WriteLine($"Não existia no bd: {rowAtivos[0].ToString().ToUpper()}");
                 conn.ExecuteQuery(Consultas.InsertFundos(rowAtivos[0].ToString().ToUpper(), rowAtivos[1].ToString(), Convert.ToInt16(rowAtivos[2])));
             }
         }

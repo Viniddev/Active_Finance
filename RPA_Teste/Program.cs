@@ -24,9 +24,11 @@ namespace RPA_Teste
             {
                 try
                 {
-                    if (Aplication.EhPeriodoUtil())
+                    ReadNews.ReadExcel();
+                    Console.ReadLine();
+
+                    if (true)
                     {
-                        ReadNews.ReadExcel();
 
                         ChromeDriver driver = Launch.LaunchNavegador();
                         Task Cont = Aplication.Contador();
