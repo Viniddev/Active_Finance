@@ -71,5 +71,24 @@ namespace RPA_Teste.Pipes.Telegram
             };
 
         }
+        public static async Task SendLogArchive(string caminho, string name)
+        {
+            try 
+            {
+                using (FileStream fs = new FileStream(caminho, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                {
+                    var fileName = name;
+                    await _botClient.SendDocumentAsync(
+                        chatId: chatId,
+                        document: InputFile.FromStream(stream: fs, fileName: fileName),
+                        caption: $"Informações atualizadas."
+                    );
+                };
+            }catch (Exception ex) 
+            {
+                Console.WriteLine("ERRO :: "+ex.ToString());
+            }
+
+        }
     }
 }

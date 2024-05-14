@@ -13,7 +13,6 @@ namespace RPA_Teste.Pipes.Navegador.Acoes
     {
         public static void CreateAlert() 
         {
-            //FAZ A CONSULTA
             ConectionDb conn = new ConectionDb();
             var TabelaAnalitics = conn.Select(Consultas.GetPriceActionsAnalitics()).Tables[0];
 
@@ -31,9 +30,6 @@ namespace RPA_Teste.Pipes.Navegador.Acoes
                 }
             }
             TelegramApi.SendMessageAsync(AlertMessage).Wait();
-
-            //SE O RETORNO TIVER ALGUEM QUE É MENOR OU IGUAL MANDA MENSAGEM NO TELEGRAM
-            //SE NÃO TIVER, IGNORA
         }
     }
 }

@@ -10,6 +10,7 @@ namespace RPA_Teste
     internal class Aplication
     {
         public static int ContadorLimiteTempo { get; set; }
+        public static bool ExecucaoFinalizou { get; set; } = false;
 
         public static async Task Contador()
         {
@@ -19,7 +20,7 @@ namespace RPA_Teste
                 {
                     ContadorLimiteTempo++;
 
-                    if (Program.ExecucaoFinalizou) 
+                    if (Aplication.ExecucaoFinalizou) 
                     {
                         break;
                     }

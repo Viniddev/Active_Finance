@@ -95,10 +95,6 @@ namespace RPA_Teste.Pipes.Excel
             {
                 foreach (DataRow rowDataResultBd in dataResultBd.Rows)
                 {
-                    Console.WriteLine($"{rowAtivos[0].ToString().ToUpper()} | {rowDataResultBd[0].ToString()}");
-
-
-
                     if (rowAtivos[0].ToString().ToUpper().Equals(rowDataResultBd[0].ToString().ToString()))
                     {
                         existenobd = true;
@@ -107,9 +103,8 @@ namespace RPA_Teste.Pipes.Excel
                     else 
                     {
                         existenobd = false;
-                    }
+                    }     
                 }
-
                 InsertAcoes(conn, existenobd, rowAtivos);
             }
         }
@@ -137,8 +132,6 @@ namespace RPA_Teste.Pipes.Excel
             {
                 foreach (DataRow rowDataResultBd in dataResultBd.Rows)
                 {
-                    Console.WriteLine($"{rowAtivos[0].ToString().ToUpper()} | {rowDataResultBd[0].ToString()}");
-
                     if (rowAtivos[0].ToString().ToUpper().Equals(rowDataResultBd[0].ToString().ToString()))
                     {
                         existenobd = true;
@@ -149,7 +142,6 @@ namespace RPA_Teste.Pipes.Excel
                         existenobd = false;
                     }
                 }
-
                 InsertFundos(conn, existenobd, rowAtivos);
             }
         }

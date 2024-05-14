@@ -3,6 +3,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using RPA_Teste.DataBase;
 using RPA_Teste.Models;
+using RPA_Teste.Pipes.Excel;
 using RPA_Teste.Pipes.Extracao;
 using RPA_Teste.Pipes.Telegram;
 using System;
