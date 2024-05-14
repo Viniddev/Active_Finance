@@ -24,11 +24,9 @@ namespace RPA_Teste
             {
                 try
                 {
-                    ReadNews.ReadExcel();
-                    Console.ReadLine();
-
-                    if (true)
+                    if (Aplication.EhPeriodoUtil())
                     {
+                        ReadNews.ReadExcel();
 
                         ChromeDriver driver = Launch.LaunchNavegador();
                         Task Cont = Aplication.Contador();
@@ -45,7 +43,6 @@ namespace RPA_Teste
                     {
                         TelegramApi.SendMessageAsync(" \U0001f6d1 Fora Do Horário util").Wait();
                     }
-
 
                     Program.ExecucaoFinalizou = true;
                 }
