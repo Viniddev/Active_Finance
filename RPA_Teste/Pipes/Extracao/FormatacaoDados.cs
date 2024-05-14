@@ -18,6 +18,15 @@ namespace RPA_Teste.Pipes.Extracao
             else
                 throw new Exception("Não foi possivel formatar data");
         }
+        public static string ConvertDataToLogExcel(string data)
+        {
+            var dataFormatada = DateTime.Now;
+
+            if (DateTime.TryParseExact(data, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dataFormatada))
+                return dataFormatada.ToString("dd/MM/yyyy");
+            else
+                throw new Exception("Não foi possivel formatar data");
+        }
 
         public static double ReceberDados(string value)
         {

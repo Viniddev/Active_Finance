@@ -43,9 +43,9 @@ namespace RPA_Teste.Pipes.Excel
                 ws.Cell(ultimalinha, "J").Value = FormatacaoDados.ReceberDados(dr[9].ToString());
                 ws.Cell(ultimalinha, "K").Value = FormatacaoDados.ReceberDados(dr[10].ToString());
                 ws.Cell(ultimalinha, "L").Value = FormatacaoDados.ReceberDados(dr[11].ToString());
-                ws.Cell(ultimalinha, "M").Value = dr[12].ToString();
-                ws.Cell(ultimalinha, "N").Value = dr[13].ToString();
-                
+                ws.Cell(ultimalinha, "M").Value = FormatacaoDados.ConvertDataToLogExcel(dr[12].ToString());
+                ws.Cell(ultimalinha, "N").Value = FormatacaoDados.ConvertDataToLogExcel(dr[12].ToString());
+
             }
 
             DataTable TabelaAcoes = GerenciamentoDeTabelasAcoes.TabelaAcoes;
