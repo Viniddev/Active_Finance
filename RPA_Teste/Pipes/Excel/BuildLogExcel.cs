@@ -50,7 +50,7 @@ namespace RPA_Teste.Pipes.Excel
             DataTable TabelaAcoes = GerenciamentoDeTabelasAcoes.TabelaAcoes;
             ws = wb.Worksheet("Acoes");
 
-            foreach (DataRow dr in TabelaFiis.Rows)
+            foreach (DataRow dr in TabelaAcoes.Rows)
             {
                 int ultimalinha = ws.LastRowUsed().RowBelow().RowNumber();
                 IXLRow objetoUltimaLinha = ws.LastRowUsed().RowBelow();
