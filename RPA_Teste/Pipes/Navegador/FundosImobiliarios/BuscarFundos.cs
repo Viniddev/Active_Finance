@@ -17,6 +17,9 @@ namespace RPA_Teste.Pipes.Navegador.FundosImobiliarios
 {
     internal class BuscarFundos
     {
+        public static string LogTxt { get; set; }   
+        public static string Mensagem { get; set; }   
+
         public static void Buscar(ChromeDriver driver)
         {
             ConectionDb conn = new ConectionDb();
@@ -58,7 +61,7 @@ namespace RPA_Teste.Pipes.Navegador.FundosImobiliarios
 
                 blocoAnexo += append;
 
-                if (contador < 3)
+                if (contador <= 5)
                 {
                     mensagem += append;
                 }
@@ -67,14 +70,16 @@ namespace RPA_Teste.Pipes.Navegador.FundosImobiliarios
                 contador++;
             }
 
-            if (contador > 3) 
+            if (contador > 5) 
             {
                 mensagem += $"\U0001F6D1 RELATORIO COMPLETO NO ANEXO... \U0001F6D1";
             }
 
             conn.Bulky(GerenciamentoTabelasFIIs.TabelaFII, "[ACTIVE_FINANCE].[DBO].[EXTRACOESFUNDOIMOBILIARIO]", 2);
-            TelegramApi.SendMessageAsync(mensagem).Wait();
-            TelegramApi.SendLogText(blocoAnexo, "Fundos").Wait();
+
+            BuscarFundos.Mensagem = mensagem;
+            BuscarFundos.LogTxt = blocoAnexo;
+
         }
     }
 }

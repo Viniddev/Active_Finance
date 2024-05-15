@@ -24,25 +24,33 @@ namespace RPA_Teste
                     if (Aplication.EhPeriodoUtil())
                     {
                         ReadNews.ReadExcel();
+                        ReadConfigs.Read();
 
                         ChromeDriver driver = Launch.LaunchNavegador();
-
                         Task Cont = Aplication.Contador();
                         Task CloseBtn = Aplication.ClosePopUp(driver);
 
                         BuscarFundos.Buscar(driver);
                         BuscarAcoes.Buscar(driver);
 
-                        AlertaPrecoFundos.CreateAlert();
-                        AlertaPrecoAcoes.CreateAlert();
+                        if (ReadConfigs.EnviarEtapaLogTxt) 
+                        {
+                            EnviarLogTextFundos.Enviar();
+                            EnviarLogTextAcoes.Enviar();
+                        }        
+                        
+                        if (ReadConfigs.EnviarEtapaAlertaPrecos) 
+                        {
+                            AlertaPrecoFundos.CreateAlert();
+                            AlertaPrecoAcoes.CreateAlert();
+                        }
 
-                        BuildLogExcel.Montar();
-
+                        if (ReadConfigs.EnviarEtapaLogExcel) 
+                        {
+                            BuildLogExcel.Montar(); 
+                        }
+                        
                         TelegramApi.SendMessageAsync(" \u2705 Extraction Concluded.").Wait();
-                    }
-                    else 
-                    {
-                        TelegramApi.SendMessageAsync(" \U0001f6d1 Fora Do Horário util").Wait();
                     }
 
                     Aplication.ExecucaoFinalizou = true;

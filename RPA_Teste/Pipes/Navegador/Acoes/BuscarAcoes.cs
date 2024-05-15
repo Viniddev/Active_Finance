@@ -11,6 +11,8 @@ namespace RPA_Teste.Pipes.Navegador.Acoes
 {
     internal class BuscarAcoes
     {
+        public static string LogTxt { get; set; }
+        public static string Mensagem { get; set; }
         public static void Buscar(ChromeDriver driver)
         {
             ConectionDb conn = new ConectionDb();
@@ -27,7 +29,6 @@ namespace RPA_Teste.Pipes.Navegador.Acoes
             string mensagem = $"  {emojiVermelho} AÇÕES \n\n";
             string blocoAnexo = mensagem;
             int contador = 0;
-
 
             foreach (string acao in acoes)
             {
@@ -50,7 +51,7 @@ namespace RPA_Teste.Pipes.Navegador.Acoes
                             $"\n\n";
 
                 blocoAnexo += append;
-                if (contador < 3) 
+                if (contador <= 5) 
                 {
                     mensagem+= append;
                 }
@@ -59,14 +60,15 @@ namespace RPA_Teste.Pipes.Navegador.Acoes
             }
 
 
-            if (contador > 3)
+            if (contador > 5)
             {
                 mensagem += $"\U0001F6D1 RELATORIO COMPLETO NO ANEXO... \U0001F6D1";
             }
 
             conn.Bulky(GerenciamentoDeTabelasAcoes.TabelaAcoes, "[ACTIVE_FINANCE].[DBO].[EXTRACOESACOES]", 2);
-            TelegramApi.SendMessageAsync(mensagem).Wait();
-            TelegramApi.SendLogText(blocoAnexo, "Acoes").Wait();
+
+            BuscarAcoes.LogTxt = blocoAnexo;
+            BuscarAcoes.Mensagem = mensagem;
         }
     }
 }
