@@ -25,31 +25,31 @@ namespace RPA_Teste.Pipes.Excel
 
             foreach (IXLRow linha in ws.RowsUsed()) 
             {
-                if (linha.RowNumber() == 1) 
+                if (linha.RowNumber() == 1)
                 {
                     continue;
                 }
-
-                switch (linha.Cell(1).Value.ToString()) 
+                else 
                 {
-                    case var textLine when textLine.Contains("ENVIAR LOG TXT"):
-                        if (linha.Cell(2).Value.ToString() == "1")
-                            EnviarEtapaLogTxt = true;
-                        break;
-                    case var textLine when textLine.Contains("ENVIAR LOG EXCEL"):
-                        if (linha.Cell(2).Value.ToString() == "1")
-                            EnviarEtapaLogExcel = true;
-                        break;
-                    case var textLine when textLine.Contains("ENVIAR ALERTA PRECOS"):
-                        if (linha.Cell(2).Value.ToString() == "1")
-                            EnviarEtapaAlertaPrecos = true;
-                        break;
-                    default:
-                        break;
-
+                    switch (linha.Cell(1).Value.ToString())
+                    {
+                        case var textLine when textLine.Contains("ENVIAR LOG TXT"):
+                            if (linha.Cell(2).Value.ToString() == "1")
+                                EnviarEtapaLogTxt = true;
+                            break;
+                        case var textLine when textLine.Contains("ENVIAR LOG EXCEL"):
+                            if (linha.Cell(2).Value.ToString() == "1")
+                                EnviarEtapaLogExcel = true;
+                            break;
+                        case var textLine when textLine.Contains("ENVIAR ALERTA PRECOS"):
+                            if (linha.Cell(2).Value.ToString() == "1")
+                                EnviarEtapaAlertaPrecos = true;
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
-
         }
     }
 }
