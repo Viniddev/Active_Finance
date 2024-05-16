@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium.Chrome;
 using RPA_Teste.Pipes.Excel;
+using RPA_Teste.Pipes.Extracao;
 using RPA_Teste.Pipes.Navegador;
 using RPA_Teste.Pipes.Navegador.Acoes;
 using RPA_Teste.Pipes.Navegador.FundosImobiliarios;
@@ -33,22 +34,7 @@ namespace RPA_Teste
                         BuscarFundos.Buscar(driver);
                         BuscarAcoes.Buscar(driver);
 
-                        if (ReadConfigs.EnviarEtapaLogTxt) 
-                        {
-                            EnviarLogTextFundos.Enviar();
-                            EnviarLogTextAcoes.Enviar();
-                        }        
-                        
-                        if (ReadConfigs.EnviarEtapaAlertaPrecos) 
-                        {
-                            AlertaPrecoFundos.CreateAlert();
-                            AlertaPrecoAcoes.CreateAlert();
-                        }
-
-                        if (ReadConfigs.EnviarEtapaLogExcel) 
-                        {
-                            BuildLogExcel.Montar(); 
-                        }
+                        GerenciamentoDeAlertas.Send();
                         
                         TelegramApi.SendMessageAsync(" \u2705 Extraction Concluded.").Wait();
                     }

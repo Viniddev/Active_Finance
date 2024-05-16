@@ -9,6 +9,7 @@ namespace RPA_Teste.Pipes.Excel
 {
     public class ReadConfigs
     {
+        public static bool EnviarEtapaMensagem { get; set; } = false;
         public static bool EnviarEtapaLogTxt { get; set; } = false;
         public static bool EnviarEtapaLogExcel { get; set; } = false;
         public static bool EnviarEtapaAlertaPrecos { get; set; } = false;
@@ -33,6 +34,10 @@ namespace RPA_Teste.Pipes.Excel
                 {
                     switch (linha.Cell(1).Value.ToString())
                     {
+                        case var textLine when textLine.Contains("ENVIAR LOG MENSAGEM"):
+                            if (linha.Cell(2).Value.ToString() == "1")
+                                EnviarEtapaMensagem = true;
+                            break;
                         case var textLine when textLine.Contains("ENVIAR LOG TXT"):
                             if (linha.Cell(2).Value.ToString() == "1")
                                 EnviarEtapaLogTxt = true;
