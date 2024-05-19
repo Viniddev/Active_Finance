@@ -2,6 +2,7 @@
 using RPA_Teste.Pipes.Navegador.Acoes;
 using RPA_Teste.Pipes.Navegador.FundosImobiliarios;
 using RPA_Teste.Pipes.Telegram;
+using RPA_Teste.Pipes.Word;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,8 @@ namespace RPA_Teste.Pipes.Extracao
                 BuildLogExcel.Montar();
             }
 
+            WriteWordDoc.Write(BuscarFundos.LogTxt);
+            WriteWordDoc.Write(BuscarAcoes.LogTxt);
         }
     }
 }

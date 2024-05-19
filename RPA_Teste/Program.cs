@@ -5,6 +5,8 @@ using RPA_Teste.Pipes.Navegador;
 using RPA_Teste.Pipes.Navegador.Acoes;
 using RPA_Teste.Pipes.Navegador.FundosImobiliarios;
 using RPA_Teste.Pipes.Telegram;
+using RPA_Teste.Pipes.Word;
+using System.Text;
 
 /*
     Espaço para estudar sobre automação
@@ -22,8 +24,12 @@ namespace RPA_Teste
             {
                 try
                 {
-                    if (Aplication.EhPeriodoUtil())
+                    if (/*Aplication.EhPeriodoUtil()*/ true)
                     {
+
+                        WriteWordDoc.Write("teste");
+                        WriteWordDoc.Write("teste2");
+
                         ReadNews.ReadExcel();
                         ReadConfigs.Read();
 

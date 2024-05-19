@@ -18,8 +18,8 @@ namespace RPA_Teste.Pipes.Excel
         public static void Montar() 
         {
             DataTable TabelaFiis = GerenciamentoTabelasFIIs.TabelaFII;
-            string filepath = @$"{System.AppDomain.CurrentDomain.BaseDirectory}Output\OutputModel.xlsx";
-            string filesave = @$"{System.AppDomain.CurrentDomain.BaseDirectory}Output\OutpuDef.xlsx";
+            string filepath = @$"{System.AppDomain.CurrentDomain.BaseDirectory}Output\Excel\OutputModel.xlsx";
+            string filesave = @$"{System.AppDomain.CurrentDomain.BaseDirectory}Output\Excel\OutpuDef.xlsx";
 
             wb = new XLWorkbook(filepath);
             ws = wb.Worksheet("Fundos");
