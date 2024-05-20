@@ -39,8 +39,10 @@ namespace RPA_Teste.Pipes.Extracao
                 BuildLogExcel.Montar();
             }
 
-            WriteWordDoc.Write(BuscarFundos.LogTxt);
-            WriteWordDoc.Write(BuscarAcoes.LogTxt);
+            if (ReadConfigs.EnviarEtapaWord) 
+            {
+                WriteWordDoc.Write(BuscarFundos.LogTxt, BuscarAcoes.LogTxt);
+            }
         }
     }
 }

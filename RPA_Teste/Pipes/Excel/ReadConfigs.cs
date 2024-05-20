@@ -13,6 +13,7 @@ namespace RPA_Teste.Pipes.Excel
         public static bool EnviarEtapaLogTxt { get; set; } = false;
         public static bool EnviarEtapaLogExcel { get; set; } = false;
         public static bool EnviarEtapaAlertaPrecos { get; set; } = false;
+        public static bool EnviarEtapaWord { get; set; } = false;
 
         private static IXLWorkbook wb;
         private static IXLWorksheet ws;
@@ -49,6 +50,10 @@ namespace RPA_Teste.Pipes.Excel
                         case var textLine when textLine.Contains("ENVIAR ALERTA PRECOS"):
                             if (linha.Cell(2).Value.ToString() == "1")
                                 EnviarEtapaAlertaPrecos = true;
+                            break;
+                        case var textLine when textLine.Contains("ENVIAR LOG WORD"):
+                            if (linha.Cell(2).Value.ToString() == "1")
+                                EnviarEtapaWord = true;
                             break;
                         default:
                             break;

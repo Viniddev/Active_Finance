@@ -12,21 +12,25 @@ namespace RPA_Teste.Pipes.Word
 {
     internal class WriteWordDoc
     {
-        public static void Write(string message) 
+        public static void Write(string acoes, string fundos) 
         {
+            string pathSaveFile = @$"{System.AppDomain.CurrentDomain.BaseDirectory}Output\Word\DocumentoTeste.docx";
             try 
             {
-                string pathSaveFile = @$"{System.AppDomain.CurrentDomain.BaseDirectory}Output\Word\DocumentoTeste.docx";
-                
                 var docx1 = new WordDocument();
-                Text addText = new Text(message);
-
+                Text addText = new Text(acoes);
                 docx1.AddParagraph(new Paragraph(addText));
+
+                Text addText2 = new Text(fundos);
+                docx1.AddParagraph(new Paragraph(addText2));
+
                 docx1.Save(pathSaveFile);
             } catch 
             {
                 Console.WriteLine("Não Gravou");
             }
+
+            Telegram.TelegramApi.SendLogArchive(pathSaveFile, "Word.docx").Wait();
             
         }
     }

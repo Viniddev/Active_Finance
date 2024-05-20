@@ -24,12 +24,8 @@ namespace RPA_Teste
             {
                 try
                 {
-                    if (/*Aplication.EhPeriodoUtil()*/ true)
+                    if (Aplication.EhPeriodoUtil())
                     {
-
-                        WriteWordDoc.Write("teste");
-                        WriteWordDoc.Write("teste2");
-
                         ReadNews.ReadExcel();
                         ReadConfigs.Read();
 
